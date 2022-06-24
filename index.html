@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>IT Fair Proj</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.3/font/bootstrap-icons.min.css" />
+    <style>
+        html,
+        body {
+            font-family: ubuntu;
+            margin: 0px;
+            height: 100%;
+        }
+
+        button {
+            background-color: #1868e4;
+            border-radius: 10px;
+            color: white;
+            font-size: 15px;
+            border: 1px solid #0858da;
+            padding: 10px;
+        }
+
+        button:hover {
+            opacity: 0.75;
+        }
+
+        button:focus {
+            outline: 2px solid dodgerblue;
+        }
+
+        #settings_close_btn {
+            float: right;
+            font-size: 15px;
+            background: none;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            padding: 1px 1px 1px 1px;
+        }
+
+        #settings_close_btn:hover {
+            background-color: orangered;
+        }
+    </style>
+</head>
+
+<body oncontextmenu="return false;">
+    <!-- <div id="instructions"
+        style="height: auto; position: absolute; background-color: green; width: 100%; border-bottom: 1px solid black; padding:none; font-family: Ubuntu; top:0">
+        Up, Down, Left, Right - Arrow Keys | Front, Back - Alt + Up or Down Arrow | Rotate - Shift + Arrow Keys | Reset
+        - Spacebar | Rotate <input type="checkbox" onchange="rotate_cubes = this.checked" id="rotate" />
+        Fullscreen<input type="checkbox"
+            onchange="if(this.checked){document.getElementById('canvas').requestFullscreen(); renderer.setSize(screen.width, screen.height)}else{render.setSize(window.innerWidth, window.innerHeight-24)}">
+    </div> -->
+    <button style="position:absolute; top: 2%; z-index: 100; right: 0.5%;" onclick="open_settings()"><i
+            class="bi bi-list"></i></button>
+    <button
+        onclick="pause = !pause; if(pause)this.innerHTML = 'Resume'; else{this.innerHTML = 'Pause'; start_animation();}"
+        style="position: absolute; top: 2%; right: 3%;">Pause</button>
+    <div id="settings_tab"
+        style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);background: rgba(238, 238, 238, 0.75); margin: auto; z-index: 100; border-radius: 10px; padding: 20px; display:none; height: 50%; width: 60%; overflow: scroll;">
+        <div style="height: auto; width: 100%;">
+            <button onclick="document.getElementById('settings_tab').style.display = 'none';"
+                id="settings_close_btn">&times;</button>
+        </div>
+        <br><br>
+        <hr>
+        <p style="font-size: 20px;">Instructions: </p>
+        <p> Front, Back, Left and Right - Arrow Keys <br>
+            Rotate - Shift + Arrow Keys <br>
+            Reset - Spacebar <br>
+            Pause - "p" or click the button below <br>
+            Open/Close Menu - Escape <br>
+            Rotate Cubes <input type="checkbox" onchange="rotate_cubes = this.checked" id="rotate" />
+            <!-- Fullscreen<input type="checkbox"
+                onchange="if(this.checked){document.getElementById('canvas').requestFullscreen(); renderer.setSize(screen.width, screen.height)}else{render.setSize(window.innerWidth, window.innerHeight-24)}"> -->
+        </p>
+        <button
+            onclick="pause = !pause; if(pause)this.innerHTML = 'Resume'; else{this.innerHTML = 'Pause'; start_animation();}">Pause</button>
+    </div>
+    <canvas id="canvas" style="height: 100%; width: 100%; display: block;"></canvas>
+    <script>
+        function open_settings() {
+            document.getElementById("settings_tab").style.display = "block";
+        }
+        var pause = false;
+        var rotate_cubes = document.getElementById("rotate").checked;
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color("black");
+        scene.fog = new THREE.Fog(0x00ff00, 50, 800);
+
+        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const canvas = document.getElementById("canvas");
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+        const ambient_light = new THREE.AmbientLight({color:0xFFFFFF});
+        scene.add(ambient_light);
+
+
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+
+        const geometry = new THREE.BoxGeometry(1, 1, 1);
+        const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+        var cubes = [
+            new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: 0xff0000 })),
+            new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: 0x00ff00 })),
+            new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: 0x0000ff })),
+            new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: 0xffff00 })),
+            new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: 0x00ffff })),
+            new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: 0xff00ff })),
+            new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: 0xffffbb })),
+            new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: 0x0000ff })),
+            new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: 0xffff00 }))
+        ];
+        var x_positions = [];
+        for (var x = -5, i = 0; i < cubes.length; x += 1.25, i++) {
+            x_positions[i] = x;
+        }
+        for (var x in cubes) {
+            cubes[x].castShadow = true;
+            cubes[x].position.set(x_positions[x], 0.75, -20);
+            scene.add(cubes[x]);
+        }
+
+
+        const light = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(light);
+        top_light = new THREE.DirectionalLight(0xffffff, 0.8);
+        top_light.intensity = 10;
+        top_light.position.set(0, 4, 0);
+        top_light.castShadow = false;
+        scene.add(top_light);
+
+
+        const right_light = new THREE.DirectionalLight(0xffffff, 0.8);
+        right_light.intensity = 10;
+        right_light.position.set(4, 4, 0);
+        right_light.rotation.z = 90;
+        right_light.castShadow = true;
+        scene.add(right_light);
+
+
+        const left_light = new THREE.DirectionalLight(0xffffff, 0.8);
+        left_light.intensity = 10;
+        left_light.position.set(-4, 4, 0);
+        left_light.rotation.z = -90;
+        left_light.castShadow = true;
+        scene.add(left_light);
+
+
+        const bottom_light = new THREE.DirectionalLight(0xffffff, 0.8);
+        bottom_light.intensity = 10;
+        bottom_light.position.set(0, -4, 0);
+        bottom_light.rotation.z = -180;
+        bottom_light.castShadow = true;
+        scene.add(bottom_light);
+
+
+        var ground_geometry = new THREE.BoxGeometry(100, 100, 0.5);
+        var ground_material = new THREE.MeshStandardMaterial({ color: 0x000000 })
+
+        ground = new THREE.Mesh(ground_geometry, ground_material);
+        ground.metalness = 1;
+        ground.position.y = 0;
+        ground.receiveShadow = true;
+        ground.castShadow = false;
+        ground.rotation.x = -Math.PI / 2;
+        scene.add(ground);
+
+        var wall_geometry = new THREE.BoxGeometry(100, 100, 0.5);
+        var wall_material = new THREE.MeshStandardMaterial({ color: 0xFFFFFF });
+        right_wall = new THREE.Mesh(wall_geometry, wall_material);
+        right_wall.metalness = 1;
+        right_wall.position.set(100, 0, 0);
+        right_light.rotation.set(0, 90, 0);
+        right_wall.castShadow = false;
+        scene.add(right_wall);
+
+
+        var direction = "bottom";
+        var keys_pressed = []
+        var special_keys = { altKey: false, shiftKey: false };
+        window.addEventListener("keydown", function (event) {
+            // keys_pressed = (keys_pressed || []);
+            keys_pressed[event.which] = true;
+            if (event.altKey) special_keys.altKey = true;
+            if (event.shiftKey) special_keys.shiftKey = true;
+            if (event.key == "p") { pause = !pause; if (!pause) start_animation(); }
+            if (event.key == "Escape") { element = document.getElementById("settings_tab"); if (element.style.display == "none") element.style.display = "block"; else element.style.display = "none"; }
+        });
+        window.addEventListener("keyup", (event) => {
+            keys_pressed[event.which] = false;
+        });
+        function resizeRendererToDisplaySize(renderer) {
+            const canvas = renderer.domElement;
+            const width = canvas.clientWidth;
+            const height = canvas.clientHeight;
+            const needResize = canvas.width !== width || canvas.height !== height;
+            if (needResize) {
+                renderer.setSize(width, height, false);
+            }
+            return needResize;
+        }
+
+        // new THREE.OrbitControls(camera, canvas);
+        camera.position.set(0, 3, 5);
+
+        window.addEventListener('resize', onWindowResize, false);
+
+        function onWindowResize() {
+
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+        }
+
+        function start_animation() {
+            if (!pause) {
+                if (resizeRendererToDisplaySize(renderer)) {
+                    const canvas = renderer.domElement;
+                    camera.aspect = canvas.clientWidth / canvas.clientHeight;
+                    camera.updateProjectionMatrix();
+                }
+                if (keys_pressed[32]) {
+                    camera.position.set(0, 3, 5);
+                    camera.rotation.set(0, 0, 0);
+                }
+                if (keys_pressed[37] && !(special_keys.shiftKey) && !(special_keys.altKey)) {
+                    camera.translateX(-0.2);
+                }
+                if (keys_pressed[39] && !(special_keys.shiftKey) && !(special_keys.altKey)) {
+                    camera.translateX(0.2);
+                }
+                /*             if(keys_pressed[38] && !(special_keys.shiftKey) && !(special_keys.altKey)){camera.position.y += 0.1; player.position.y += 0.1;}
+                            if(keys_pressed[40] && !(special_keys.shiftKey) && !(special_keys.altKey)){camera.position.y -= 0.1; player.position.y -= 0.1;}
+                            */
+                console.log(keys_pressed[38]
+                    , keys_pressed[40]
+                    , keys_pressed[37]
+                    , keys_pressed[39]
+                )
+                if (keys_pressed[38] && !(special_keys.shiftKey) && !(special_keys.altKey)) { camera.translateZ(-0.2) }
+                if (keys_pressed[40] && !(special_keys.shiftKey) && !(special_keys.altKey)) { camera.translateZ(0.2) }
+                if (keys_pressed[37] && special_keys.shiftKey) { camera.rotateY(0.01) }
+                if (keys_pressed[39] && special_keys.shiftKey) { camera.rotateY(-0.01) }
+                if (keys_pressed[38] && special_keys.shiftKey) { camera.rotateX(0.01) }
+                if (keys_pressed[40] && special_keys.shiftKey) { camera.rotateX(-0.01) }
+                for (const x in keys_pressed) {
+                    keys_pressed[x] = "";
+                }
+                special_keys.altKey = false;
+                special_keys.shiftKey = false;
+
+                if (cubes[0].position.y > 4) direction = "bottom";
+                else if (cubes[0].position.y < 0.75) direction = "top";
+
+                if (direction == "top") {
+                    for (var x in cubes) {
+                        cubes[x].position.y += 0.01;
+                        if (rotate_cubes) {
+                            cubes[x].rotation.x += 0.01;
+                            cubes[x].rotation.y += 0.01;
+                            cubes[x].rotation.z += 0.01;
+                        }
+                    }
+                }
+                else if (direction == "bottom") {
+                    for (var x in cubes) {
+                        cubes[x].position.y -= 0.01;
+
+                        if (rotate_cubes) {
+                            cubes[x].rotation.x -= 0.01;
+                            cubes[x].rotation.y -= 0.01;
+                            cubes[x].rotation.z -= 0.01;
+                        }
+                    }
+                }
+                requestAnimationFrame(start_animation);
+
+                renderer.render(scene, camera);
+            }
+        };
+
+        start_animation();
+    </script>
+</body>
+
+</html>
