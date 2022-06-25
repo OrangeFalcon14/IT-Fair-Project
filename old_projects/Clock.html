@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<!--
+!!!!!!! UI looks very bad on phones and okay on iPads and tablets. Use only with laptop or desktop (or with and iPad or tablet if you want). !!!!!!!
+P.S. Try to comment out only the <html> tag. everything still works without it!
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="icon" href="assets/images/clock_icon.png" type="image/png" id="icon_link">
+    <title>Clock</title>
+    <style>
+* {
+  font-family: Calibri;
+}
+.big {
+  font-size:100px;
+}
+.animate-fading{animation:fading 1s infinite}@keyframes fading{0%{opacity:0}50%{opacity:0.5}100%{opacity:0}}
+    </style>
+  </head>
+  <body class="w3-teal w3-display-container" onload="on_load()" onbeforeunload="body_unload()">
+      <!-- Navigation bar (top bar) -->
+      <div class="w3-top">
+        <div class="w3-bar w3-black" style="height:10%">
+          <div class='w3-center' height="15px" style="font-size:17px;">
+            <button  id="settings_button" class = "w3-bar-item w3-button" onclick="open_app('settings_panel')"style="float:right;"><i class="fa fa-gear" style="font-size:22px;"></i> Settings</button>
+            <button id="clock_button" class="w3-bar-item w3-button w3-indigo" onclick="open_app('clock')">Clock</button>
+            <button id="timer_button" class="w3-bar-item w3-button" onclick="open_app('timer')">Timer</button>
+            <button id="stpwtch_button" class="w3-bar-item w3-button" onclick="open_app('stopwatch')">Stopwatch</button>
+          </div>
+        </div>
+      </div>
+      <div class="w3-bottom w3-border w3-padding w3-display-container w3-round w3-grey" id="disclaimer">
+        <p class="w3-col" style="font-size:12.5px; width:95%;"> Like all other websites, this one too uses cookies (or will use it in the near future) to make your experience more comfortable. By using this site, you acknowledge that you have read and understood my Terms and Conditions. For more details contact Vishnu at +91 9012345678.</p>
+        <span class="w3-display-right w3-button w3-green w3-rest" onclick="document.getElementById('disclaimer').style.display = 'none'">I Agree</span>
+      </div>
+      <!-- Settings Tab -->
+      <div style="height:90%">
+        <div class="w3-container w3-animate-bottom app" id = "settings_panel" style="display:none">
+          <br>
+          <p style="font-size:30px">General</p>
+          <p style="font-size:20px">Preset Themes</p>
+          <div class="w3-bar">
+            <button style="width:10%; height:50px" class="w3-bar-item w3-black w3-button w3-border" onclick="change_theme('b&w')">White on Black</button>
+            <button style="width:10%; height:50px; background-color: white; color: black;" class="w3-bar-item w3-white w3-button w3-border" onclick="change_theme('w&b')">Black on White</button>
+            <button style="width:10%; height:50px" class="w3-bar-item w3-teal w3-button w3-border" onclick="change_theme('t&w')">White on Teal</button>
+            <span style="background-color:#009688"><button style="width:10%; height:50px" class="w3-bar-item w3-button w3-border" onclick="change_theme('t&b')"><span style="color:black;">Black on Teal</span></button></span>
+          </div>
+          <p style="font-size:20px">Background Color</p>
+          <p style='font-size:15px'>Choose a Background Color:</p>
+          <input type="color" id="bg_color_picker" width="100px"/><br><br>
+          <button onclick="bg_color_change()" class="w3-button w3-orange w3-round">Submit</button>
+          <button onclick="bg_reset()" class="w3-button w3-orange w3-round">Reset</button>
+          <p style="font-size:20px">Font Color</p>
+          <p style='font-size:15px'>Choose a Font Color:</p>
+          <input type="color" id="font_color_picker" width="100px"/><br><br>
+          <button onclick="font_color_change()" class="w3-button w3-orange w3-round">Submit</button>
+          <p style="font-size:20px">Source Code</p>
+          <p style="font-size:15px"> Shows the source code of the webpage.</p>
+          <button onclick="view_source_code()" class="w3-button w3-orange w3-round">View Source Code</button>
+          <button onclick="hide_source_code()" class="w3-button w3-orange w3-round">Hide Source Code</button>
+          <p><code type='text/html tag start'><xmp id="view_code"></xmp></code></p>
+          <hr style="width:50%">
+          <p style="font-size:30px">Clock</p>
+          <p style="font-size:20px">Time Format</p>
+          <p style="font-size:15px">Choose a time format:</p>
+          <select id='time_format'class="w3-select w3-orange w3-round" style="width:20%;">
+            <option value="am_pm" style="background-color: orange">AM/PM</option>
+            <option value="twenty_four_hour" class="w3-orange">24 Hour Format</option>
+          </select>
+          <p style="font-size:20px">Date Format</p>
+          <p style="font-size:15px">Choose a date format:</p>
+          <select id='date_format'class="w3-select w3-orange w3-round" style="width:20%;">
+            <option value="ddmmyy" style="background-color: orange">Date/Month/Year (Ex:1/1/2000)</option>
+            <option value="daymonthdateyear" class="w3-orange">Day/Month/Date   (Ex:Thu/Sep/2000)</option>
+          </select>
+          <hr style="width:50%">
+          <br><br><br><br><br>
+        </div>
+        <!-- Clock Tab -->
+        <div id="clock" class="w3-container app w3-animate-bottom">
+          <br>
+          <p style="font-size:100px;" id="time_disp" class="w3-center"></p>
+          <p style="font-size:30px" id="date_disp" class="w3-center"></p>
+        </div>
+
+        <!-- Timer Tab -->
+        <div id="timer"class="w3-container app w3-animate-bottom" style="display:none">
+          <div class="w3-bar w3-center">
+            <br>
+            <p style="font-size:30px">Minutes:</p>
+            <input type="number" id="mins" min='0' value="0"/>
+            <p style="font-size:30px">Seconds:</p>
+            <input type="number" id="seconds" min='0' max='59' value="0"/>
+            <br><br>
+            <button class='w3-button w3-orange w3-round ' onclick='start_timer()' id='start'>Start</button>
+            <!--
+            <button class='w3-button w3-orange w3-round ' onclick='pause_timer()' id='pause'>Pause</button>
+            <button class='w3-button w3-orange w3-round ' onclick='resume_timer()' id='resume'>Resume</button>
+          -->
+            <button class='w3-button w3-orange w3-round' onclick='reset_timer()'>Reset</button>
+            <p id='countdown' class='big'></p>
+          </div>
+        </div>
+        <!-- Stopwatch Tab -->
+        <div id="stopwatch" class="w3-container app w3-animate-bottom" style="display:none">
+          <br>
+          <br>
+          <br>
+          <div class='w3-bar w3-center'>
+            <button onclick="start()" id='start_btn' class='w3-button w3-border w3-round w3-orange w3-center'>Start</button>
+            <button onclick="stop()" class='w3-button w3-border w3-round w3-orange w3-center'>Stop</button>
+            <button onclick="restart()" id="restart_btn" class='w3-button w3-border w3-round w3-orange w3-center'>Reset</button>
+          </div>
+          <p id="stpwtch" class='big w3-center w3-text'>0 : 0.00</p>
+        </div>
+      </div>
+      <!-- Code -->
+      <script>
+function on_load() {
+  // var loc_to_icon = ((window.location.href).slice(0, -10)) + "clock_icon.png";
+  // console.log(loc_to_icon);
+  // document.getElementById("icon_link").href = loc_to_icon;
+}
+      </script>
+      <script>
+function setCookie(cname,cvalue,exdays) {
+  const d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  let expires = "expires=" + d.toGMTString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+/*
+function body_load(){
+  if((getCookie("bg") && (getCookie("fg"))) != ""){
+    console.log("In body_load()");
+    var color_val = getCookie("bg");
+    var font_color_val = getCookie("fg");
+    document.body.classList.remove('w3-teal')
+    document.body.style.background = color_val;
+    for(var x=0; x <= (document.getElementsByTagName("p").length)-1; x++){
+      document.getElementsByTagName("p")[x].style.color = font_color_val;
+    }
+  }
+}
+function body_unload(){
+  color_val = document.getElementById("bg_color_picker").value;
+  font_color_val = document.getElementById("font_color_picker").value;
+  setCookie("bg", color_val, 10);
+  setCookie("fg", font_color_val, 10);
+}*/
+//setInterval(body_unload, 1);
+      </script>
+      <script>
+function view_source_code(){
+  disp = document.getElementById("view_code");
+  content = document.getElementsByTagName("html")[0].innerHTML;
+  content = "<!DOCTYPE html>\n" + "<html>\n" + content + "\n</html>"
+  disp.innerHTML = content;
+}
+function hide_source_code(){
+  disp = document.getElementById("view_code");
+  disp.innerHTML = "";
+}
+      </script>
+      <script>
+function change_theme(theme){
+  if(theme == "b&w"){
+    document.body.classList.remove('w3-teal')
+    document.body.style.background = "#000000";
+    document.getElementById("view_code").style.color = "#ffffff"
+    for(var x=0; x <= (document.getElementsByTagName("p").length)-1; x++){
+      document.getElementsByTagName("p")[x].style.color = "white";
+    }
+  }else if (theme == "t&w") {
+    document.body.classList.add('w3-teal')
+    for(var x=0; x <= (document.getElementsByTagName("p").length)-1; x++){
+      document.getElementsByTagName("p")[x].style.color = "white";
+    }
+  }else if (theme == "w&b"){
+    document.body.classList.remove('w3-teal')
+    document.body.style.background = "#ffffff";
+    for(var x=0; x <= (document.getElementsByTagName("p").length)-1; x++){
+      document.getElementsByTagName("p")[x].style.color = "black";
+    }
+  }else if (theme == "t&b"){
+    document.body.classList.add('w3-teal')
+    for(var x=0; x <= (document.getElementsByTagName("p").length)-1; x++){
+      document.getElementsByTagName("p")[x].style.color = "black";
+    }
+  }
+}
+      </script>
+      <script>
+function bg_color_change(){
+  color_val = document.getElementById("bg_color_picker").value;
+  document.body.classList.remove('w3-teal')
+  document.body.style.background = color_val;
+}
+function bg_reset(){
+  document.body.classList.add('w3-teal')
+  document.body.style.background = "";
+}
+function font_color_change(){
+  font_color_val = document.getElementById("font_color_picker").value;
+  for(var x=0; x <= (document.getElementsByTagName("p").length)-1; x++){
+    document.getElementsByTagName("p")[x].style.color = font_color_val;
+  }
+}
+/*function font_reset(){
+  for(var x=0; x <= document.getElementsByTagName("p").length; x++){
+    document.getElementsByTagName("p")[x].style.color = font_color_val;
+  }
+}*/
+      </script>
+      <script>
+var time_disp = document.getElementById("time_disp");
+function increment_time(){
+  const date = new Date();
+  var time_format = document.getElementById("time_format");
+  var date_format = document.getElementById("date_format");
+  if(time_format.value == "am_pm"){
+    if(date.getHours() == 12){
+      const time = 12 + ":" + date.getMinutes() + ":" + date.getSeconds();
+      time_disp.innerHTML = time + " PM"
+    }else{
+      const time = date.getHours()%12 + ":" + date.getMinutes() + ":" + date.getSeconds();
+      if (date.getHours() > 12){
+        time_disp.innerHTML = time + " PM"
+      } else{
+      time_disp.innerHTML = time + " AM";
+      }
+    }
+    } else{
+      const time = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+      time_disp.innerHTML = time;
+    }
+  if(date_format.value == "ddmmyy"){
+    var date_disp = document.getElementById("date_disp");
+    date_disp.innerHTML = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+  }else{
+    var date_disp = document.getElementById(('date_disp'));
+    day_of_week = date.getDay();
+    switch (day_of_week) {
+      case 0:
+        day_of_week = "Sun";
+        break;
+      case 1:
+        day_of_week = "Mon";
+        break;
+      case 2:
+        day_of_week = "Tue";
+        break;
+      case 3:
+        day_of_week = "Wed";
+        break;
+      case 4:
+        day_of_week = "Thu";
+        break;
+      case 5:
+        day_of_week = "Fri";
+        break;
+      case 6:
+        day_of_week = "Sat";
+        break;
+    }
+    month = date.getMonth();
+    switch (month) {
+      case 0:
+        month = "Jan";
+        break;
+      case 1:
+        month = "Feb";
+        break;
+      case 2:
+        month = "Mar";
+        break;
+      case 3:
+        month = "Apr";
+        break;
+      case 4:
+        month = "May";
+        break;
+      case 5:
+        month = "Jun";
+        break;
+      case 6:
+        month = "Jul";
+        break;
+      case 7:
+        month = "Aug";
+        break;
+      case 8:
+        month = "Sep";
+        break;
+      case 9:
+        month = "Oct";
+        break;
+      case 10:
+        month = "Nov";
+        break;
+      case 11:
+        month = "Dec";
+        break;
+    }
+    date_disp.innerHTML = day_of_week + " " + month + " " + date.getDate();
+  }
+}
+setInterval(increment_time, 1);
+      </script>
+      <script>
+var timer = 0;
+
+function increment(){
+  timer += 0.01;
+  var seconds = (timer%60).toFixed(2);
+  //console.log(seconds);
+  var mins = Math.floor(timer/60)//.toFixed();
+  document.getElementById('stpwtch').innerHTML = mins + ' : ' + seconds;
+  //document.getElementById('stpwtch').innerHTML = timer.toFixed(2);
+}
+function start(){
+  interval = setInterval(increment, 10);
+  document.getElementById("restart_btn").disabled = true;
+  document.getElementById("start_btn").disabled = true;
+}
+function stop(){
+  clearInterval(interval);
+  finalmins = Math.floor(timer/60)//.toFixed()
+  finalseconds = (timer%60).toFixed(2);
+  document.getElementById('stpwtch').innerHTML = finalmins + "m" + " : " + finalseconds + "s";
+  document.getElementById("restart_btn").disabled = false;
+  document.getElementById("start_btn").disabled = false;
+  /*console.log(timer);
+  console.log(timer/60);
+  console.log(finalmins);
+  console.log(finalseconds);*/
+}
+function restart(){
+  timer = 0;
+  document.getElementById('stpwtch').innerHTML = '0 : 0.00';
+}
+      </script>
+      <script>
+var mins, seconds, countdown, interval, display, audio;
+function say(m) {
+  var msg = new SpeechSynthesisUtterance();
+  var voices = window.speechSynthesis.getVoices();
+  msg.voiceURI = "native";
+  msg.volume = 1;
+  msg.rate = 0.8;
+  msg.pitch = 1;
+  msg.text = m;
+  msg.lang = 'en-US';
+  speechSynthesis.speak(msg);
+}
+function start_timer(){
+  mins = Number(document.getElementById("mins").value);
+  seconds = Number(document.getElementById("seconds").value);
+  display = document.getElementById("countdown");
+  countdown = (mins * 60) + seconds;
+  if(countdown == 0){
+    alert("Hey!! Enter a value if you want to use the Timer App! This app will not accept mischief makers!");
+    //display.innerHTML = "Hey!! Enter a value!";
+    return;
+  }
+  decrement();
+  interval = setInterval(decrement, 1000);
+  function decrement(){
+    display.classList.add('animate-fading');
+    document.getElementById("start").disabled = true;
+    finalmins = Math.floor(countdown/60)//.toFixed()
+    finalseconds = (countdown%60);
+    display.innerHTML = finalmins + "m" + " " + finalseconds + "s";
+    countdown -= 1;
+    if (countdown == -1){
+      say("Time is up!");
+      document.getElementById("start").disabled = false;
+      clearInterval(interval);
+      display.innerHTML = "Time is Up!";
+    }
+  }
+}
+function reset_timer(){
+  mins = document.getElementById("mins").value = 0;
+  seconds = document.getElementById("seconds").value = 0;
+  display = document.getElementById("countdown");
+  display.classList.remove("animate-fading");
+  document.getElementById("start").disabled = false;
+  clearInterval(interval);
+  display.innerHTML = "";
+}
+      </script>
+      <script>
+function open_app(appName){
+  var i;
+  var x = document.getElementsByClassName('app');
+  for (i = 0; i < x.length; i++){
+    x[i].style.display = "none";
+  }
+  document.getElementById(appName).style.display = "block";
+  if(appName == "settings_panel"){
+    document.getElementById("settings_button").classList.add("w3-indigo");
+    document.getElementById("clock_button").classList.remove("w3-indigo");
+    document.getElementById("timer_button").classList.remove("w3-indigo");
+    document.getElementById("stpwtch_button").classList.remove("w3-indigo");
+  }else if (appName == "clock") {
+    document.getElementById("settings_button").classList.remove("w3-indigo");
+    document.getElementById("clock_button").classList.add("w3-indigo");
+    document.getElementById("timer_button").classList.remove("w3-indigo");
+    document.getElementById("stpwtch_button").classList.remove("w3-indigo");
+  }else if (appName == "timer") {
+    document.getElementById("settings_button").classList.remove("w3-indigo");
+    document.getElementById("clock_button").classList.remove("w3-indigo");
+    document.getElementById("timer_button").classList.add("w3-indigo");
+    document.getElementById("stpwtch_button").classList.remove("w3-indigo");
+  }else if (appName == "stopwatch") {
+    document.getElementById("settings_button").classList.remove("w3-indigo");
+    document.getElementById("clock_button").classList.remove("w3-indigo");
+    document.getElementById("timer_button").classList.remove("w3-indigo");
+    document.getElementById("stpwtch_button").classList.add("w3-indigo");
+  }
+}
+      </script>
+  </body>
+</html>
