@@ -10,6 +10,10 @@
 </head>
 
 <body>
+   <div id="pregame">
+        <p>Click the start button to play the game. While the neural network trains, the web page may hang a little.</p>
+        <button onclick="newGame()">Start</button><br>
+    </div>
     <canvas id="gameCanvas" width="1000" height="600"></canvas>
     <script>
         const FPS = 60;
@@ -123,30 +127,11 @@
 
         //set up game parameters
         var level, lives, roids, score, scoreHigh, ship, text, textAlpha;
-        newGame();
 
-        // set up the neural network
+        // newGame();
+        
         var nn, aiShootTime = 0;
-        if (AUTOMATION_ON) {
-            nn = new NeuralNetwork(NUM_INPUTS, NUM_HIDDEN, NUM_OUTPUTS);
-            //train the network
-            let ax, ay, sa, sx, sy;
-            for (let i = 0; i < NUM_SAMPLES; i++) {
-                ax = Math.random() * (canv.width + ROID_SIZE) - ROID_SIZE / 2;
-                ay = Math.random() * (canv.width + ROID_SIZE) - ROID_SIZE / 2;
-
-                sa = Math.random() * Math.PI * 2;
-                sx = ship.x;
-                sy = ship.y;
-
-                let angle = angleToPoint(sx, sy, sa, ax, ay);
-
-                let direction = angle > Math.PI ? OUTPUT_LEFT : OUTPUT_RIGHT;
-
-                nn.train(normalizeInput(ax, ay, angle, sa), [direction]);
-            }
-        }
-
+        
         function normalizeInput(roidX, roidY, roidA,shipA) {
             let input = [];
             input[0] = (roidX + ROID_SIZE / 2) / (canv.width + ROID_SIZE);
@@ -155,7 +140,7 @@
             input[3] = shipA / (Math.PI * 2);
             return input;
         }
-
+        
         function angleToPoint(x, y, bearing, targetX, targetY) {
             let angleToTarget = Math.atan2(-targetY + y, targetX - x);
             let diff = bearing - angleToTarget;
@@ -179,6 +164,29 @@
                 scoreHigh = 0;
             } else {
                 scoreHigh = parseInt(scoreStr);
+            }
+
+            document.getElementById("pregame").style.display = "none";
+
+            // set up the neural network
+            if (AUTOMATION_ON) {
+                nn = new NeuralNetwork(NUM_INPUTS, NUM_HIDDEN, NUM_OUTPUTS);
+                //train the network
+                let ax, ay, sa, sx, sy;
+                for (let i = 0; i < NUM_SAMPLES; i++) {
+                    ax = Math.random() * (canv.width + ROID_SIZE) - ROID_SIZE / 2;
+                    ay = Math.random() * (canv.width + ROID_SIZE) - ROID_SIZE / 2;
+    
+                    sa = Math.random() * Math.PI * 2;
+                    sx = ship.x;
+                    sy = ship.y;
+    
+                    let angle = angleToPoint(sx, sy, sa, ax, ay);
+    
+                    let direction = angle > Math.PI ? OUTPUT_LEFT : OUTPUT_RIGHT;
+    
+                    nn.train(normalizeInput(ax, ay, angle, sa), [direction]);
+                }
             }
 
             newLevel();
