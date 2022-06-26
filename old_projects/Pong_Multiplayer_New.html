@@ -416,8 +416,9 @@
                 }, 1000);*/
                 this.interval = setInterval(update_game_area, 30);
                 this.ball_speed_interval = setInterval(() => {
+                    if(!game_area.running)return;
                     ball_speed += 1;
-                    console.log("Increased ball speed. Curren ball speed: " + ball_speed)
+                    console.log("Increased ball speed. Current ball speed: " + ball_speed)
                 }, 10*1000)
                 window.addEventListener('keydown', function (e) {
                     game_area.keys = (game_area.keys || []);
