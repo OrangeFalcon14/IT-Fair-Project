@@ -1,0 +1,861 @@
+<!-- <!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <title>Pong Multiplayer</title>
+    <style>
+        button {
+            outline: none;
+            border: 1px solid black;
+            background-color: red;
+            color: white;
+            height: 30px;
+            width: 60px;
+            border-radius: 5px;
+        }
+
+        input {
+            width: 40px;
+            outline: none;
+            border: 1px solid black;
+            background-color: white;
+            color: black;
+            padding: 5px;
+        }
+
+        :disabled {
+            background-color: grey;
+        }
+    </style>
+</head>
+
+<body onload="this.canvas.width = '600px'; this.canvas.height = '600px';">
+    <canvas id="canvas"
+        style="width: 600px; height: 600px; float:left; background-image: url('assets/images/Background.png'); margin: 0 auto;"></canvas>
+    <div id="info_tab"
+        style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);background: rgba(238, 238, 238, 0.75); margin: auto; z-index: 100; border-radius: 10px; padding: 20px; display:block; height: 50%; width: 60%; overflow: scroll;">
+        <button onclick="document.getElementById('info_tab').style.display = 'none';" id="settings_close_btn">&times;</button>
+        <span style="font-weight: 900; font-size: larger;">Instructions:-</span>
+        <br>
+        <ul>
+            <li>Use the arrow keys to move the paddle(Green).</li>
+            <li>Use the W, A, S and D keys to move the paddle(Red).</li>
+            <li>The ball's starting location is generated randomly(well, pseudo-randomly).<br> But don't worry, it will
+                be far
+                enough from the paddle for you to hit it(mostly).</li>
+            <li>The speed of the paddle is half of that of the ball. If you feel the paddle is moving too slowly,
+                <br>enter a
+                new value in the speed input box, start the game and refresh the page.</li>
+            <li>Use the input field below to select the speed of the ball. 2-Elderly, 5-Normal, 10-Champ</li>
+            <li>Click the big red button to start the game.</li>
+            <li>You can choose to not have momentum by turning off the switch below.</li>
+            <li>If momentum if on, you can change the speed and direction of the ball by making contact with it
+                while<br> the
+                paddle is in motion.(The momentum of the paddle is transferred to the ball)</li>
+            <li>Keep in mind that this game is still under development and not completely free of bugs. <br>If you
+                happen to
+                come accross one, refresh the page and follow<br> the comprehensive troubleshooting guide provided
+                below:
+                <pre><code>if(problem_persists){
+  if(you_know_vishnu){
+    contact_him();
+  }else{
+    get_lost();
+  }
+}</code></pre>
+            </li>
+        </ul>
+        <div style="padding-top:10px;">
+            <button id="start_btn"
+                onclick="if(document.getElementById('output').innerHTML == 'Game Over!'){window.location.reload();localStorage.setItem('speed', Number(document.getElementById('ball_speed').value));} else{startGame()}/*startGame()*/"
+                style="float:left">Start</button>
+            <label style="float:left;padding-left:10px; padding-top: 4px;" for="ball_speed" value="5">Ball Speed:
+            </label>
+            <input style="float:left" onchange="if(!(game_area.running))ball_speed = this.value" type="number" max="10"
+                min="2" id="ball_speed" value="5">
+            <label for="momentum_state" style="float:left;padding-left:10px; padding-top: 4px;">Momentum: </label>
+            <input type="checkbox" onchange="momentum_state = this.checked" style="float:left; padding-top: 40px;"
+                id="momentum_state" />
+            <label for="momentum_state" style="float:left;padding-left:10px; padding-top: 4px;">Points to win: </label>
+            <input type="number" onchange="points_to_win = this.value" style="float:left;" id="points_to_win"
+                value="5" />
+            <label for="move_vertically" style="float:left;padding-left:10px; padding-top: 4px;">Allow paddles to move
+                vertically: </label>
+            <input type="checkbox" onchange="move_vertically = this.checked" id="move_vertically" checked />
+        </div>
+        <br><br><br><br><br>
+        <p style="position: relative; left:0px; display: none;" id="output"></p>
+    </div>
+    <style>
+        canvas {
+            background-color: #d3d3d3;
+        }
+
+        body {
+            background-color: black;
+            color: white;
+        }
+    </style>
+    <script>
+        //TODO: add countdown
+        //TODO: add 2nd player
+
+        window.onload = function(){
+            canv = document.getElementById("canvas")
+            canv.attr('width', parseInt(canv.css('width')))
+            canv.attr('height', parseInt(canv.css('height')))
+        }
+
+        function random_number(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+        var points_to_win = document.getElementById("points_to_win").value;
+        var paddle;
+        var paddle_2;
+        var ball;
+        var player1_score = 0;
+        var player2_score = 0;
+        var comp_score = 0;
+        var ball_speed = localStorage.getItem("speed");
+        var momentum_state = document.getElementById("momentum_state").checked;
+        var move_vertically = true;
+        if (ball_speed == "" || ball_speed < 2) {
+            ball_speed = document.getElementById("ball_speed").value;
+            if (ball_speed > 10) ball_speed = 10;
+            else if (ball_speed < 2) ball_speed = 2;
+        }
+        ball_speed = Number(ball_speed);
+        document.getElementById("ball_speed").value = ball_speed;
+        function startGame() {
+            try {
+                localStorage.setItem("localstorage", "localstorage");
+                localStorage.removeItem("localstorage");
+            } catch (e) {
+                alert("Your browser does not support the features necessary for this webpage to function correctly.\n" + "Error:\n" + e);
+            }
+            if (game_area.running) {
+                stop();
+                return;
+            }
+            player1_score = 0;
+            player2_score = 0;
+            game_area.start();
+            paddle = new component(200, 10, "#00ff00", 150, 450, "paddle");
+            paddle_2 = new component(200, 10, "#ff0000", 150, 50, "paddle");
+            var ball_x = random_number(50, 450);
+            var ball_y = random_number(10, 250);
+            ball = new component(20, 20, "yellow", ball_x, ball_y, "ball");
+            ball.speedX = 0;
+            ball.speedY = 0;
+            move_ball();
+        }
+        function move_ball() {
+            ball.speedY += ball_speed;
+            if (Math.floor(Math.random() * 11) > 5) {
+                ball.speedX += ball_speed;
+            } else {
+                ball.speedX -= ball_speed;
+            }
+        }
+        function component(width, height, color, x, y, type) {
+            this.width = width;
+            this.height = height;
+            this.speedX = 0;
+            this.speedY = 0;
+            this.x = x;
+            this.y = y;
+            this.update = function () {
+                ctx = game_area.context;
+                ctx.fillStyle = color;
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+            }
+            this.newPos = function () {
+                this.x += this.speedX;
+                this.y += this.speedY;
+            }
+            this.crash_with_paddle = function (which_paddle) {
+                var ball_left = ball.x;
+                var ball_right = ball.x + (ball.width);
+                var ball_bottom = ball.y + (ball.height);
+                var ball_top = ball.y;
+                var crash = true;
+                if (which_paddle == paddle) {
+                    var paddle_left = paddle.x;
+                    var paddle_right = paddle.x + (paddle.width);
+                    var paddle_top = paddle.y;
+                    var paddle_bottom = paddle.y + paddle.height;
+                    if ((ball_bottom < paddle_top) || (ball_right < paddle_left) || (ball_left > paddle_right) || (ball_top > paddle_bottom)) {
+                        crash = false;
+                    }
+                } else if (which_paddle == paddle_2) {
+                    var paddle_left = paddle_2.x;
+                    var paddle_right = paddle_2.x + (paddle_2.width);
+                    var paddle_top = paddle_2.y;
+                    var paddle_bottom = paddle_2.y + paddle_2.height;
+                    if ((ball_top > paddle_bottom) || (ball_right < paddle_left) || (ball_left > paddle_right) || (ball_top > paddle_bottom)) {
+                        crash = false;
+                    }
+                }
+                return crash;
+            }
+            this.crash_with_wall = function () {
+                var ball_top = ball.y;
+                var ball_bottom = ball.y + (ball.height);
+                var crash = "";
+                if (ball_top < 0) {
+                    crash = "top";
+                } else if (ball_bottom > 500) {
+                    crash = "bottom";
+                }
+                return crash;
+            }
+            this.crash_with_side_walls = function () {
+                var ball_right = ball.x + (ball.width);
+                var ball_left = ball.x;
+                var crash = false;
+                if (ball_right > 500 || ball_left < 0) {
+                    crash = true;
+                }
+                return crash;
+            }
+            this.paddle_crash_with_side_walls = function (which_paddle) {
+                var right = which_paddle.x + (which_paddle.width);
+                var left = which_paddle.x;
+                var crash = "";
+                if (right > 500) {
+                    crash = "right";
+                } else if (left < 0) {
+                    crash = "left"
+                }
+                return crash;
+            }
+            this.move_out_of_boundaries = function (which_paddle) {
+                var top = which_paddle.y;
+                var bottom = which_paddle.y + which_paddle.height;
+                var crash = "";
+                if (which_paddle == paddle) {
+                    if (top < 300) crash = "top";
+                    else if (bottom > 500) crash = "bottom";
+                } else if (which_paddle == paddle_2) {
+                    if (top < 0) crash = "top";
+                    else if (bottom > 200) crash = "bottom";
+                }
+                return crash;
+            }
+        }
+        function game_over(winner) {
+            document.getElementById("start_btn").click();
+            game_area.clear();
+            ctx = game_area.context;
+            ctx.fillStyle = winner;
+            ctx.font = "70px Calibri";
+            ctx.clearRect(0, 0, 500, 500);
+            var x = (winner == "Red") ? 60 : 30;
+            ctx.fillText("Winner: " + winner, x, 250);
+            ctx.font = "40px Calibri";
+            ctx.fillText("Green: " + player1_score, 175, 360);
+            ctx.fillText("Red: " + player2_score, 175, 320);
+        }
+
+        function respawn_ball() {
+            ball.x = ball.y = 230;
+            // setTimeout(update_game_area, 1000);
+            update_game_area();
+        }
+
+        function update_game_area() {
+            if (player1_score >= points_to_win) { game_over("Green"); game_area.stop(); return; }
+            else if (player2_score == points_to_win) { game_over("Red"); game_area.stop(); return; }
+            if (ball.crash_with_paddle(paddle)) {
+                ball.speedY = -1 * ball_speed;
+                if (momentum_state) { ball.speedX = (ball.speedX) + paddle.speedX; /* ball.speedY += paddle.speedY Uncomment this if you want the ball to move faster when struck by the paddle while in upward motion*/ }
+                else ball.speedX = ball.speedX;
+            } else if (ball.crash_with_paddle(paddle_2)) {
+                ball.speedY = ball_speed;
+                if (momentum_state) { ball.speedX = (ball.speedX) + paddle_2.speedX; /* ball.speedY += paddle_2.speedY Uncomment this if you want the ball to move faster when struck by the paddle while in upward motion*/ }
+                else ball.speedX = ball.speedX;
+            } else if (ball.crash_with_wall() == "top") {
+                ball.speedY = ball_speed;
+                ball.speedX = (ball.speedX);
+                player1_score++;
+                game_area.last_score = game_area.frame_number;
+                respawn_ball();
+                return;
+                // ball.x = ball.y = 230;
+                //document.getElementById("start_btn").click();
+                //return;
+            } else if (ball.crash_with_wall() == "bottom") {
+                ball.speedY = -1 * ball_speed;
+                ball.speedX = (ball.speedX);
+                player2_score++;
+                game_area.last_score = game_area.frame_number;
+                respawn_ball();
+                return;
+                // ball.x = ball.y = 230;
+                //document.getElementById("start_btn").click();
+                //return;
+            } else if (ball.crash_with_side_walls() == true) {
+                ball.speedX = -1 * (ball.speedX);
+            }
+            game_area.clear();
+            paddle.speedX = 0;
+            paddle.speedY = 0;
+            paddle_2.speedX = 0;
+            paddle_2.speedY = 0;
+            if (game_area.keys && game_area.keys[37] && !(paddle.paddle_crash_with_side_walls(paddle))) { paddle.speedX = -1 * (ball_speed / 2); }
+            if (game_area.keys && game_area.keys[39] && !(paddle.paddle_crash_with_side_walls(paddle))) { paddle.speedX = ball_speed / 2; }
+            if (game_area.keys && game_area.keys[38] && move_vertically && !(paddle.move_out_of_boundaries(paddle))) { paddle.speedY = -1 * (ball_speed / 2); }
+            if (game_area.keys && game_area.keys[40] && move_vertically && !(paddle.move_out_of_boundaries(paddle))) { paddle.speedY = ball_speed / 2; }
+            if (game_area.keys && game_area.keys[65] && !(paddle_2.paddle_crash_with_side_walls(paddle_2))) { paddle_2.speedX = -1 * (ball_speed / 2); }
+            if (game_area.keys && game_area.keys[68] && !(paddle_2.paddle_crash_with_side_walls(paddle_2))) { paddle_2.speedX = ball_speed / 2; }
+            if (game_area.keys && game_area.keys[87] && move_vertically && !(paddle_2.move_out_of_boundaries(paddle_2))) { paddle_2.speedY = -1 * (ball_speed / 2); }
+            if (game_area.keys && game_area.keys[83] && move_vertically && !(paddle_2.move_out_of_boundaries(paddle_2))) { paddle_2.speedY = ball_speed / 2; }
+            //paddle.newPos();
+            ball.newPos();
+            ball.update();
+            paddle.newPos();
+            paddle.update();
+            paddle_2.newPos();
+            paddle_2.update();
+            draw_score();
+            game_area.frame_number += 1;
+            if (paddle.paddle_crash_with_side_walls(paddle)) {
+                if (paddle.paddle_crash_with_side_walls(paddle) == "right") {
+                    paddle.x -= 1;
+                } else if (paddle.paddle_crash_with_side_walls(paddle) == "left") {
+                    paddle.x += 1;
+                }
+            }
+            if (paddle_2.paddle_crash_with_side_walls(paddle_2)) {
+                if (paddle_2.paddle_crash_with_side_walls(paddle_2) == "right") {
+                    paddle_2.x -= 1;
+                } else if (paddle_2.paddle_crash_with_side_walls(paddle_2) == "left") {
+                    paddle_2.x += 1;
+                }
+            }
+            if (paddle.move_out_of_boundaries(paddle)) {
+                if (paddle.move_out_of_boundaries(paddle) == "top") {
+                    paddle.y += 1;
+                } else if (paddle.move_out_of_boundaries(paddle) == "bottom") {
+                    paddle.y -= 1;
+                }
+            }
+            // var blah = Math.pow(100000000, 10000);
+            if (paddle_2.move_out_of_boundaries(paddle_2)) {
+                if (paddle_2.move_out_of_boundaries(paddle_2) == "top") {
+                    paddle_2.y += 1;
+                } else if (paddle_2.move_out_of_boundaries(paddle_2) == "bottom") {
+                    paddle_2.y -= 1;
+                }
+            }
+        }
+        function draw_score() {
+            ctx = game_area.context;
+            ctx.fillStyle = "white";
+            ctx.font = "23px Nimbus Roman";
+            ctx.fillText("Score: " + player2_score, 10, 25);
+            ctx.fillText("Score: " + player1_score, 10, 480);
+        }
+        function draw_countdown(number) {
+            game_area.clear();
+            ctx = game_area.context;
+            ctx.fillStyle = "white";
+            ctx.font = "150px Nimbus Roman";
+            ctx.fillText(number, 200, 300);
+        }
+        function stop() {
+            game_area.stop();
+            game_over();
+            document.getElementById("output").innerHTML = "Game Over!"
+        }
+        var game_area = {
+            canvas: document.getElementById("canvas"),
+            frame_number: 0,
+            last_score: 0,
+            running: false,
+            start: function () {
+                this.context = canvas.getContext("2d");
+                this.running = true;
+                /*draw_countdown("3");
+                setTimeout(function() {
+                  draw_countdown("2");
+                  setTimeout(function() {
+                    draw_countdown("1");
+                    setTimeout(function() {
+                      draw_countdown("Start");
+                      this.interval = setInterval(update_game_area, 20);
+                    }, 1000);
+                  }, 1000);
+                }, 1000);*/
+                this.interval = setInterval(update_game_area, 20);
+                window.addEventListener('keydown', function (e) {
+                    game_area.keys = (game_area.keys || []);
+                    game_area.keys[e.keyCode] = true;
+                })
+                window.addEventListener('keyup', function (e) {
+                    game_area.keys[e.keyCode] = false;
+                })
+                window.addEventListener("keydown", function (e) {
+                    game_area.key = e.which;
+                });
+                window.addEventListener("keyup", function (e) {
+                    game_area.key = false;
+                });
+            },
+            clear: function () {
+                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            },
+            stop: function () {
+                this.running = false;
+                clearInterval(this.interval);
+            }
+        };
+    </script>
+</body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <title>Pong Multiplayer</title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.3/font/bootstrap-icons.min.css" />
+    <style>
+        canvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        button {
+            outline: none;
+            border: 1px solid black;
+            background-color: red;
+            color: white;
+            height: 30px;
+            width: 60px;
+            border-radius: 5px;
+        }
+
+        input {
+            width: 40px;
+            outline: none;
+            border: 1px solid black;
+            background-color: white;
+            color: black;
+            padding: 5px;
+        }
+
+        :disabled {
+            background-color: grey;
+        }
+
+        #settings_close_btn {
+            float: right;
+            font-size: 15px;
+            background: none;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            padding: 1px 1px 1px 1px;
+        }
+
+        #settings_close_btn:hover {
+            background-color: orangered;
+        }
+    </style>
+</head>
+
+<body onload="this.canvas.width = 600;this.canvas.height = 600;">
+    <button style="position:absolute; top: 2%; z-index: 100; left: 50%;" onclick="document.getElementById('info_tab').style.display = 'block';"><i
+            class="bi bi-list"></i></button>
+    <button
+        onclick="pause = !pause; if(pause)this.innerHTML = 'Resume'; else{this.innerHTML = 'Pause'; start_animation();}"
+        style="position: absolute; top: 2%; right: 50%;">Pause</button>
+    <canvas id="canvas" style="float:left; background-image: url('assets/images/Background.png');"></canvas>
+    <div id="info_tab"
+        style="position: absolute; top: 50%; left: 50%; color:black; transform: translate(-50%, -50%);background: rgba(238, 238, 238, 0.75); margin: auto; z-index: 100; border-radius: 10px; padding: 20px; display:block; height: 50%; width: 60%; overflow: scroll;">
+        <button onclick="document.getElementById('info_tab').style.display = 'none';"
+            id="settings_close_btn">&times;</button>
+        <br><br>
+        <span style="font-weight: 900; font-size: larger;">Instructions:-</span>
+        <br>
+        <ul>
+            <li>Use the arrow keys to move the paddle(Green).</li>
+            <li>Use the W, A, S and D keys to move the paddle(Red).</li>
+            <li>The ball's starting location is generated randomly(well, pseudo-randomly).<br> But don't worry, it will
+                be far
+                enough from the paddle for you to hit it(mostly).</li>
+            <li>The speed of the paddle is half of that of the ball. If you feel the paddle is moving too slowly,
+                <br>enter a
+                new value in the speed input box, start the game and refresh the page.
+            </li>
+            <li>Use the input field below to select the speed of the ball. 2-Elderly, 5-Normal, 10-Champ</li>
+            <li>Click the big red button to start the game.</li>
+            <li>You can choose to not have momentum by turning off the switch below.</li>
+            <li>If momentum if on, you can change the speed and direction of the ball by making contact with it
+                while<br> the
+                paddle is in motion.(The momentum of the paddle is transferred to the ball)</li>
+            <li>Keep in mind that this game is still under development and not completely free of bugs. <br>If you
+                happen to
+                come accross one, refresh the page and follow<br> the comprehensive troubleshooting guide provided
+                below:
+                <pre><code>if(problem_persists){
+    if(you_know_vishnu){
+        contact_him();
+    }else{
+        get_lost();
+    }
+}</code></pre>
+            </li>
+        </ul>
+        <div style="padding-top:10px;">
+            <button id="start_btn"
+                onclick="if(document.getElementById('output').innerHTML == 'Game Over!'){window.location.reload();localStorage.setItem('speed', Number(document.getElementById('ball_speed').value));} else{startGame()} document.getElementById('info_tab').style.display = 'none';/*startGame()*/"
+                style="float:left">Start</button>
+            <label style="float:left;padding-left:10px; padding-top: 4px;" for="ball_speed" value="5">Ball Speed:
+            </label>
+            <input style="float:left" onchange="if(!(game_area.running))ball_speed = this.value" type="number" max="10"
+                min="2" id="ball_speed" value="5">
+            <label for="momentum_state" style="float:left;padding-left:10px; padding-top: 4px;">Momentum: </label>
+            <input type="checkbox" onchange="momentum_state = this.checked" style="float:left; padding-top: 40px;"
+                id="momentum_state" />
+            <label for="momentum_state" style="float:left;padding-left:10px; padding-top: 4px;">Points to win: </label>
+            <input type="number" onchange="points_to_win = this.value" style="float:left;" id="points_to_win"
+                value="5" />
+            <label for="move_vertically" style="float:left;padding-left:10px; padding-top: 4px;">Allow paddles to move
+                vertically: </label>
+            <input type="checkbox" onchange="move_vertically = this.checked" id="move_vertically" checked />
+        </div>
+        <br><br><br><br><br>
+        <p style="position: relative; left:0px; display: none;" id="output"></p>
+    </div>
+    <style>
+        canvas {
+            background-color: #d3d3d3;
+        }
+
+        body {
+            background-color: black;
+            color: white;
+        }
+    </style>
+    <script>
+        //TODO: add countdown
+        //TODO: add 2nd player
+        var pause = false;
+        function random_number(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+        canv = document.getElementById("canvas");
+        var points_to_win = document.getElementById("points_to_win").value;
+        var paddle;
+        var paddle_2;
+        var ball;
+        var player1_score = 0;
+        var player2_score = 0;
+        var comp_score = 0;
+        var ball_speed = localStorage.getItem("speed");
+        var momentum_state = document.getElementById("momentum_state").checked;
+        var move_vertically = true;
+        if (ball_speed == "" || ball_speed < 2) {
+            ball_speed = document.getElementById("ball_speed").value;
+            if (ball_speed > 10) ball_speed = 10;
+            else if (ball_speed < 2) ball_speed = 2;
+        }
+        ball_speed = Number(ball_speed);
+        document.getElementById("ball_speed").value = ball_speed;
+        function startGame() {
+            try {
+                localStorage.setItem("localstorage", "localstorage");
+                localStorage.removeItem("localstorage");
+            } catch (e) {
+                alert("Your browser does not support the features necessary for this webpage to function correctly.\n" + "Error:\n" + e);
+            }
+            if (game_area.running) {
+                stop();
+                return;
+            }
+            player1_score = 0;
+            player2_score = 0;
+            game_area.start();
+            paddle = new component(250, 10, "#00ff00", canv.width / 2 - 125, canv.height - 50, "paddle");
+            paddle_2 = new component(250, 10, "#ff0000", canv.width / 2 - 125, 50, "paddle");
+            var ball_x = random_number(50, canv.height - 50);
+            var ball_y = random_number(10, canv.height - 250);
+            ball = new component(20, 20, "yellow", ball_x, ball_y, "ball");
+            ball.speedX = 0;
+            ball.speedY = 0;
+            move_ball();
+        }
+        function move_ball() {
+            ball.speedY += ball_speed;
+            if (Math.floor(Math.random() * 11) > 5) {
+                ball.speedX += ball_speed;
+            } else {
+                ball.speedX -= ball_speed;
+            }
+        }
+        function component(width, height, color, x, y, type) {
+            this.width = width;
+            this.height = height;
+            this.speedX = 0;
+            this.speedY = 0;
+            this.x = x;
+            this.y = y;
+            this.update = function () {
+                ctx = game_area.context;
+                ctx.fillStyle = color;
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+            }
+            this.newPos = function () {
+                this.x += this.speedX;
+                this.y += this.speedY;
+            }
+            this.crash_with_paddle = function (which_paddle) {
+                var ball_left = ball.x;
+                var ball_right = ball.x + (ball.width);
+                var ball_bottom = ball.y + (ball.height);
+                var ball_top = ball.y;
+                var crash = true;
+                if (which_paddle == paddle) {
+                    var paddle_left = paddle.x;
+                    var paddle_right = paddle.x + (paddle.width);
+                    var paddle_top = paddle.y;
+                    var paddle_bottom = paddle.y + paddle.height;
+                    if ((ball_bottom < paddle_top) || (ball_right < paddle_left) || (ball_left > paddle_right) || (ball_top > paddle_bottom)) {
+                        crash = false;
+                    }
+                } else if (which_paddle == paddle_2) {
+                    var paddle_left = paddle_2.x;
+                    var paddle_right = paddle_2.x + (paddle_2.width);
+                    var paddle_top = paddle_2.y;
+                    var paddle_bottom = paddle_2.y + paddle_2.height;
+                    if ((ball_top > paddle_bottom) || (ball_right < paddle_left) || (ball_left > paddle_right) || (ball_top > paddle_bottom)) {
+                        crash = false;
+                    }
+                }
+                return crash;
+            }
+            this.crash_with_wall = function () {
+                var ball_top = ball.y;
+                var ball_bottom = ball.y + (ball.height);
+                var crash = "";
+                if (ball_top < 0) {
+                    crash = "top";
+                } else if (ball_bottom > canv.height) {
+                    crash = "bottom";
+                }
+                return crash;
+            }
+            this.crash_with_side_walls = function () {
+                var ball_right = ball.x + (ball.width);
+                var ball_left = ball.x;
+                var crash = false;
+                if (ball_right > canv.width || ball_left < 0) {
+                    crash = true;
+                }
+                return crash;
+            }
+            this.paddle_crash_with_side_walls = function (which_paddle) {
+                var right = which_paddle.x + (which_paddle.width);
+                var left = which_paddle.x;
+                var crash = "";
+                if (right > canv.width) {
+                    crash = "right";
+                } else if (left < 0) {
+                    crash = "left"
+                }
+                return crash;
+            }
+            this.move_out_of_boundaries = function (which_paddle) {
+                var top = which_paddle.y;
+                var bottom = which_paddle.y + which_paddle.height;
+                var crash = "";
+                if (which_paddle == paddle) {
+                    if (top < canv.height - 200) crash = "top";
+                    else if (bottom > canv.height) crash = "bottom";
+                } else if (which_paddle == paddle_2) {
+                    if (top < 0) crash = "top";
+                    else if (bottom > 200) crash = "bottom";
+                }
+                return crash;
+            }
+        }
+        function game_over(winner) {
+            document.getElementById("start_btn").click();
+            game_area.clear();
+            ctx = game_area.context;
+            ctx.fillStyle = winner;
+            ctx.font = "70px Calibri";
+            ctx.clearRect(0, 0, canv.width, canv.height);
+            var x = (winner == "Red") ? 60 : 30;
+            ctx.fillText("Winner: " + winner, x, 250);
+            ctx.font = "40px Calibri";
+            ctx.fillText("Green: " + player1_score, 175, 360);
+            ctx.fillText("Red: " + player2_score, 175, 320);
+        }
+
+        function respawn_ball() {
+            ball.x = ball.y = (canv.width / 2) - ball.width;
+            // setTimeout(update_game_area, 1000);
+            update_game_area();
+        }
+
+        function update_game_area() {
+            if (pause) return;
+            if (player1_score >= points_to_win) { game_over("Green"); game_area.stop(); return; }
+            else if (player2_score == points_to_win) { game_over("Red"); game_area.stop(); return; }
+            if (ball.crash_with_paddle(paddle)) {
+                ball.speedY = -1 * ball_speed;
+                if (momentum_state) { ball.speedX = (ball.speedX) + paddle.speedX; /* ball.speedY += paddle.speedY Uncomment this if you want the ball to move faster when struck by the paddle while in upward motion*/ }
+                else ball.speedX = ball.speedX;
+            } else if (ball.crash_with_paddle(paddle_2)) {
+                ball.speedY = ball_speed;
+                if (momentum_state) { ball.speedX = (ball.speedX) + paddle_2.speedX; /* ball.speedY += paddle_2.speedY Uncomment this if you want the ball to move faster when struck by the paddle while in upward motion*/ }
+                else ball.speedX = ball.speedX;
+            } else if (ball.crash_with_wall() == "top") {
+                ball.speedY = ball_speed;
+                ball.speedX = (ball.speedX);
+                player1_score++;
+                game_area.last_score = game_area.frame_number;
+                respawn_ball();
+                return;
+                // ball.x = ball.y = 230;
+                //document.getElementById("start_btn").click();
+                //return;
+            } else if (ball.crash_with_wall() == "bottom") {
+                ball.speedY = -1 * ball_speed;
+                ball.speedX = (ball.speedX);
+                player2_score++;
+                game_area.last_score = game_area.frame_number;
+                respawn_ball();
+                return;
+                // ball.x = ball.y = 230;
+                //document.getElementById("start_btn").click();
+                //return;
+            } else if (ball.crash_with_side_walls() == true) {
+                ball.speedX = -1 * (ball.speedX);
+            }
+            game_area.clear();
+            paddle.speedX = 0;
+            paddle.speedY = 0;
+            paddle_2.speedX = 0;
+            paddle_2.speedY = 0;
+            if (game_area.keys && game_area.keys[37] && !(paddle.paddle_crash_with_side_walls(paddle))) { paddle.speedX = -1 * (ball_speed / 2); }
+            if (game_area.keys && game_area.keys[39] && !(paddle.paddle_crash_with_side_walls(paddle))) { paddle.speedX = ball_speed / 2; }
+            if (game_area.keys && game_area.keys[38] && move_vertically && !(paddle.move_out_of_boundaries(paddle))) { paddle.speedY = -1 * (ball_speed / 2); }
+            if (game_area.keys && game_area.keys[40] && move_vertically && !(paddle.move_out_of_boundaries(paddle))) { paddle.speedY = ball_speed / 2; }
+            if (game_area.keys && game_area.keys[65] && !(paddle_2.paddle_crash_with_side_walls(paddle_2))) { paddle_2.speedX = -1 * (ball_speed / 2); }
+            if (game_area.keys && game_area.keys[68] && !(paddle_2.paddle_crash_with_side_walls(paddle_2))) { paddle_2.speedX = ball_speed / 2; }
+            if (game_area.keys && game_area.keys[87] && move_vertically && !(paddle_2.move_out_of_boundaries(paddle_2))) { paddle_2.speedY = -1 * (ball_speed / 2); }
+            if (game_area.keys && game_area.keys[83] && move_vertically && !(paddle_2.move_out_of_boundaries(paddle_2))) { paddle_2.speedY = ball_speed / 2; }
+            //paddle.newPos();
+            ball.newPos();
+            ball.update();
+            paddle.newPos();
+            paddle.update();
+            paddle_2.newPos();
+            paddle_2.update();
+            draw_score();
+            game_area.frame_number += 1;
+            if (paddle.paddle_crash_with_side_walls(paddle)) {
+                if (paddle.paddle_crash_with_side_walls(paddle) == "right") {
+                    paddle.x -= 1;
+                } else if (paddle.paddle_crash_with_side_walls(paddle) == "left") {
+                    paddle.x += 1;
+                }
+            }
+            if (paddle_2.paddle_crash_with_side_walls(paddle_2)) {
+                if (paddle_2.paddle_crash_with_side_walls(paddle_2) == "right") {
+                    paddle_2.x -= 1;
+                } else if (paddle_2.paddle_crash_with_side_walls(paddle_2) == "left") {
+                    paddle_2.x += 1;
+                }
+            }
+            if (paddle.move_out_of_boundaries(paddle)) {
+                if (paddle.move_out_of_boundaries(paddle) == "top") {
+                    paddle.y += 1;
+                } else if (paddle.move_out_of_boundaries(paddle) == "bottom") {
+                    paddle.y -= 1;
+                }
+            }
+            if (paddle_2.move_out_of_boundaries(paddle_2)) {
+                if (paddle_2.move_out_of_boundaries(paddle_2) == "top") {
+                    paddle_2.y += 1;
+                } else if (paddle_2.move_out_of_boundaries(paddle_2) == "bottom") {
+                    paddle_2.y -= 1;
+                }
+            }
+        }
+        function draw_score() {
+            ctx = game_area.context;
+            ctx.fillStyle = "white";
+            ctx.font = "23px Nimbus Roman";
+            ctx.fillText("Score: " + player2_score, 10, 20);
+            ctx.fillText("Score: " + player1_score, 10, canv.height - 20);
+        }
+        function draw_countdown(number) {
+            game_area.clear();
+            ctx = game_area.context;
+            ctx.fillStyle = "white";
+            ctx.font = "150px Nimbus Roman";
+            ctx.fillText(number, 200, 300);
+        }
+        function stop() {
+            game_area.stop();
+            game_over();
+            document.getElementById("output").innerHTML = "Game Over!"
+        }
+        var game_area = {
+            canvas: document.getElementById("canvas"),
+            frame_number: 0,
+            last_score: 0,
+            running: false,
+            start: function () {
+                this.context = canvas.getContext("2d");
+                this.running = true;
+                /*draw_countdown("3");
+                setTimeout(function() {
+                  draw_countdown("2");
+                  setTimeout(function() {
+                    draw_countdown("1");
+                    setTimeout(function() {
+                      draw_countdown("Start");
+                      this.interval = setInterval(update_game_area, 20);
+                    }, 1000);
+                  }, 1000);
+                }, 1000);*/
+                this.interval = setInterval(update_game_area, 20);
+                window.addEventListener('keydown', function (e) {
+                    game_area.keys = (game_area.keys || []);
+                    game_area.keys[e.keyCode] = true;
+                })
+                window.addEventListener('keyup', function (e) {
+                    game_area.keys[e.keyCode] = false;
+                })
+                window.addEventListener("keydown", function (e) {
+                    game_area.key = e.which;
+                });
+                window.addEventListener("keyup", function (e) {
+                    game_area.key = false;
+                });
+            },
+            clear: function () {
+                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            },
+            stop: function () {
+                this.running = false;
+                clearInterval(this.interval);
+            }
+        };
+    </script>
+</body>
+
+</html>
