@@ -55,8 +55,8 @@
 </head>
 
 <body onload="this.canvas.width = 600;this.canvas.height = 600;">
-    <button style="position:absolute; top: 2%; z-index: 100; left: 50%;" onclick="document.getElementById('info_tab').style.display = 'block';"><i
-            class="bi bi-list"></i></button>
+    <button style="position:absolute; top: 2%; z-index: 100; left: 50%;"
+        onclick="document.getElementById('info_tab').style.display = 'block';"><i class="bi bi-list"></i></button>
     <button
         onclick="pause = !pause; if(pause)this.innerHTML = 'Resume'; else{this.innerHTML = 'Pause'; start_animation();}"
         style="position: absolute; top: 2%; right: 50%;">Pause</button>
@@ -135,7 +135,7 @@
         function random_number(min, max) {
             return Math.floor(Math.random() * (max - min)) + min;
         }
-        canv = document.getElementById("canvas");
+        var canv = document.getElementById("canvas");
         var points_to_win = document.getElementById("points_to_win").value;
         var paddle;
         var paddle_2;
@@ -414,7 +414,11 @@
                     }, 1000);
                   }, 1000);
                 }, 1000);*/
-                this.interval = setInterval(update_game_area, 20);
+                this.interval = setInterval(update_game_area, 30);
+                this.ball_speed_interval = setInterval(() => {
+                    ball_speed += 1;
+                    console.log("Increased ball speed. Curren ball speed: " + ball_speed)
+                }, 10*1000)
                 window.addEventListener('keydown', function (e) {
                     game_area.keys = (game_area.keys || []);
                     game_area.keys[e.keyCode] = true;
