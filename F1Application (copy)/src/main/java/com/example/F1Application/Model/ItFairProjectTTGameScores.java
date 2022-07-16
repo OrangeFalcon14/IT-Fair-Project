@@ -1,11 +1,12 @@
-package com.example.F1Application.Controller;
+package com.example.F1Application.Model;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import lombok.Data;
 
-@Table(name = "IT_Fair_Project_TT_Game_Scores")
+import javax.persistence.*;
+
+@Data
+@Table(name = "IT_Fair_Project_TT_Game_Data")
+@Entity
 public class ItFairProjectTTGameScores {
 
     @Id
@@ -13,7 +14,11 @@ public class ItFairProjectTTGameScores {
     private long id;
 
     @Column(name = "winner")
-    private int winner;
+    private String winner;
 
-        
+    @Column(name = "number_of_rallies")
+    private long numberOfRallies;
+
+    @Column(name = "time_taken")
+    private long timeTaken;
 }
