@@ -688,14 +688,18 @@
                 }
                 // handleedge of screen
                 if (ship.lasers[i].x < 0) {
-                    ship.lasers[i].x = canv.width;
+                    // ship.lasers[i].x = canv.width;
+                    ship.lasers[i].xv *= -1;
                 } else if (ship.lasers[i].x > canv.width) {
-                    ship.lasers[i].x = 0;
+                    // ship.lasers[i].x = 0;
+                    ship.lasers[i].xv *= -1;
                 }
                 if (ship.lasers[i].y < 0) {
-                    ship.lasers[i].y = canv.height;
+                    // ship.lasers[i].y = canv.height;
+                    ship.lasers[i].yv *= -1;
                 } else if (ship.lasers[i].y > canv.height) {
-                    ship.lasers[i].y = 0;
+                    // ship.lasers[i].y = 0;
+                    ship.lasers[i].yv *= -1;
                 }
             }
             // move the asteroids
@@ -704,16 +708,20 @@
                 roids[i].y += roids[i].yv;
 
                 // handle edge of screen
-                if (roids[i].x < 0 - roids[i].r) {
-                    roids[i].x = canv.width + roids[i].r;
-                } else if (roids[i].x > canv.width + roids[i].r) {
-                    roids[i].x = 0 - roids[i].r;
+                if (roids[i].x < 0 + roids[i].r) {
+                    // roids[i].x = canv.width + roids[i].r;
+                    roids[i].xv *= -1;
+                } else if (roids[i].x > canv.width - roids[i].r) {
+                    // roids[i].x = 0 - roids[i].r;
+                    roids[i].xv *= -1;
                 }
 
-                if (roids[i].y < 0 - roids[i].r) {
-                    roids[i].y = canv.height + roids[i].r;
-                } else if (roids[i].y > canv.height + roids[i].r) {
-                    roids[i].y = 0 - roids[i].r;
+                if (roids[i].y < 0 + roids[i].r) {
+                    // roids[i].y = canv.height + roids[i].r;
+                    roids[i].yv *= -1;
+                } else if (roids[i].y > canv.height - roids[i].r) {
+                    // roids[i].y = 0 - roids[i].r;
+                    roids[i].yv *= -1;
                 }
             }
             if (SHOW_CENTRE_DOT) {
