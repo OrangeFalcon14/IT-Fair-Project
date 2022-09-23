@@ -19,7 +19,7 @@ public class CalculatorService {
         this.calculatorRepository = calculatorRepository;
     }
 
-    //add
+    //all functions
     public ResponseEntity saveCalculation (CalculatorDto calculatorDto){
 
         Scanner in = new Scanner(System.in);
