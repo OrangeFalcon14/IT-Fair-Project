@@ -2,7 +2,6 @@ package com.example.F1Application.Dto;
 
 import lombok.Data;
 
-import javax.persistence.Column;
 
 @Data
 public class ItFairProjectTTGameDto {
