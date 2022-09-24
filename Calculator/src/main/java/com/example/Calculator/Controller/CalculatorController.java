@@ -27,4 +27,10 @@ public class CalculatorController {
 
         return calculatorService.getAndCalculate();
     }
+
+    @GetMapping("/api/allCalculations")
+    public List<CalculatorDto> getAllCalculations() {
+
+        return calculatorService.getAllCalculations();
+    }
 }

@@ -134,4 +134,24 @@ public class CalculatorService {
 
         return toReturn;
     }
+    public List<CalculatorDto> getAllCalculations() {
+
+        List<Calculator> calculations = calculatorRepository.findAll();
+
+        List<CalculatorDto> toReturn = new ArrayList<>();
+
+        for (Calculator calculator : calculations) {
+
+            CalculatorDto dto = new CalculatorDto();
+
+            dto.setId(calculator.getId());
+            dto.setNumber1(calculator.getNumber1());
+            dto.setNumber2(calculator.getNumber2());
+            dto.setAnswer(calculator.getAnswer());
+
+            toReturn.add(dto);
+        }
+
+        return toReturn;
+    }
 }

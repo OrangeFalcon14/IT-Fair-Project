@@ -1,5 +1,12 @@
 Ideas :
--typing speed test
--iq test
--gk quiz
--Give the results in the end
+-typing speed test(20s)(max 10  points)
+-iq test(simple aptitude test)(7q)(total : 2mins)(max 20 points)
+-gk quiz(5ques)(1min)(max 20 points)
+-optical illusion test(1ques)(20s)(max 10 points)
+-Give the results in the end :
+>Ranking of the user
+>Total points scored by the user
+
+total points : 60
+
+(Give name for the application)
