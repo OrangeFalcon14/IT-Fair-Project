@@ -13,5 +13,5 @@ public class CalculatorDto {
 
     private long number2;
 
-    private long answer;
+    private double answer;
 }
