@@ -4,8 +4,96 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculator</title>
+    <style>
+        html, body{
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;;
+        }
+        #container{
+            background-color: #404040;
+            width: 100%;
+            height: 100%;
+        }
+        #calculator{
+            position: relative;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 35%;
+            height: auto;
+            padding: 0;
+            overflow: hidden;
+        }
+        #input{
+            width: 100%;/* calc(100% - 8px); */
+            height: 30%;
+            border: 1px solid #404040;
+            font-size: 20px;
+        }
+        #buttons-container{
+            width: 100%;
+            height: 70%;
+            display: grid;
+            gap: 2px;
+        }
+        #buttons-container button{
+            font-size: 15px;
+            border: none;
+            background-color: rgb(208, 242, 255);
+            height: 40px;
+        }
+    </style>
 </head>
 <body>
-    
+    <div id="container">
+        <div id="calculator">
+             <input type="text" name="input" id="input" />
+             <div id="buttons-container">
+                <button id="btn1" onclick="addChar(1)" style="grid-column-start: 1; grid-row-start: 1;">1</button>
+                <button id="btn2" onclick="addChar(2)" style="grid-column-start: 2; grid-row-start: 1;">2</button>
+                <button id="btn3" onclick="addChar(3)" style="grid-column-start: 3; grid-row-start: 1;">3</button>
+                <button id="btn_add" onclick="addChar('+')" style="grid-column-start: 4; grid-row-start: 1;">+</button>
+
+                <button id="btn4" onclick="addChar(4)" style="grid-column-start: 1; grid-row-start: 2;">4</button>
+                <button id="btn5" onclick="addChar(5)" style="grid-column-start: 2; grid-row-start: 2;">5</button>
+                <button id="btn6" onclick="addChar(6)" style="grid-column-start: 3; grid-row-start: 2;">6</button>
+                <button id="btn_sub" onclick="addChar('-')" style="grid-column-start: 4; grid-row-start: 2;">-</button>
+
+                <button id="btn7" onclick="addChar(7)" style="grid-column-start: 1; grid-row-start: 3;">7</button>
+                <button id="btn8" onclick="addChar(8)" style="grid-column-start: 2; grid-row-start: 3;">8</button>
+                <button id="btn9" onclick="addChar(9)" style="grid-column-start: 3; grid-row-start: 3;">9</button>
+                <button id="btn_mul" onclick="addChar('*')" style="grid-column-start: 4; grid-row-start: 3;">*</button>
+
+                <button id="btn7" onclick="addChar('(')" style="grid-column-start: 1; grid-row-start: 4;">(</button>
+                <button id="btn8" onclick="addChar(0)" style="grid-column-start: 2; grid-row-start: 4;">0</button>
+                <button id="btn9" onclick="addChar(')')" style="grid-column-start: 3; grid-row-start: 4;">)</button>
+                <button id="btn_mul" onclick="addChar('/')" style="grid-column-start: 4; grid-row-start: 4;">/</button>
+
+                <button id="btn_backspace" onclick="backspace()" style="grid-column-start: 1; grid-row-start: 5">C</button>
+                <button id="btn_equals" onclick="calculate_result()" style="grid-column-start: 2; grid-row-start: 5; grid-column-end: 5;">=</button>
+             </div>
+        </div>
+    </div>
+    <script>
+        const calculator = document.getElementById("calculator");
+        const input = document.getElementById("input");
+
+        function addChar(char) {
+            input.value += char;
+        }
+
+        function backspace() {
+            input.value = input.value.slice(0, -1);
+        }
+
+        function calculate_result() {
+            let result = eval(input.value);
+            input.value = result;
+        }
+
+    </script>
 </body>
 </html>
