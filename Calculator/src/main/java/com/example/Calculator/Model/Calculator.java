@@ -23,5 +23,5 @@ public class Calculator {
     private long number2;
 
     @Column(name = "answer")
-    private long answer;
+    private double answer;
 }
