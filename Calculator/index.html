@@ -72,8 +72,8 @@
                 <button id="btn9" onclick="addChar(')')" style="grid-column-start: 3; grid-row-start: 4;">)</button>
                 <button id="btn_mul" onclick="addChar('/')" style="grid-column-start: 4; grid-row-start: 4;">/</button>
 
-                <button id="btn_backspace" onclick="backspace()" style="grid-column-start: 1; grid-row-start: 5">C</button>
-                <button id="btn_equals" onclick="calculate_result()" style="grid-column-start: 2; grid-row-start: 5; grid-column-end: 5;">=</button>
+                <button id="btn_equals" onclick="calculate_result()" style="grid-column-start: 1; grid-row-start: 5; grid-column-end: 4;">=</button>
+                <button id="btn_backspace" onclick="backspace()" style="grid-column-start: 4; grid-row-start: 5">C</button>
              </div>
         </div>
     </div>
@@ -81,7 +81,37 @@
         const calculator = document.getElementById("calculator");
         const input = document.getElementById("input");
 
+        input.addEventListener("keydown", (event) => {
+            if(!(event.ctrlKey || event.altKey /* || event.shiftKey */)){
+                if(event.key == "Enter"){
+                    calculate_result(); 
+                    return;
+                }
+                // if(!(event.keyCode >= 48 && event.keyCode <= 57)){
+                //     event.preventDefault();
+                // }
+                if(event.keyCode >= 65 && event.keyCode <= 90){
+                    console.log(event.keyCode);
+                    event.preventDefault();
+                }
+            }
+        });
+
         function addChar(char) {
+            ["+", "-", "*", "/"].forEach((i) => {
+                if(char == i){
+                    ["+", "-", "*", "/"].forEach((j) => {
+                        if(input.value.charAt(-1) == j){
+                            return;
+                        }
+                    })
+                }
+            })
+            // for (const i of ["+", "-", "*", "/"]) {
+            //     if (char == i){
+            //         if (input.value.charAt(-1) ==)
+            //     }
+            // }
             input.value += char;
         }
 
@@ -90,8 +120,10 @@
         }
 
         function calculate_result() {
-            let result = eval(input.value);
-            input.value = result;
+            if(input.value != ""){
+                let result = eval(input.value);
+                input.value = result;
+            }
         }
 
     </script>
