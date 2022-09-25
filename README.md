@@ -9,5 +9,3 @@ Projects:
 - ~About our school(history, founder, etc)~
 - ~About our schools teachers\*~
 - ~Our schools campus~
-
-\* Tasks marked with ' \* ' are least priority and will be completed if time suffices
