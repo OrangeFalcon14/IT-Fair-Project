@@ -5,3 +5,4 @@
 5. GK test scores
 6. Total points
 7. User Rank
+8. optical illusion scores
