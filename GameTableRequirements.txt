@@ -1,0 +1,8 @@
+1. Id
+2. User Name
+3. Typing test scores
+4. IQ test scores
+5. GK test scores
+6. Total points
+7. User Rank
+8. optical illusion scores
