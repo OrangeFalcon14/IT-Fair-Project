@@ -20,4 +20,8 @@ public class ItFairGameProjectDto {
     private long totalPoints;
 
     private long userRank;
+
+    private String userTyped;
+
+    private long userTypedSpeed;
 }
