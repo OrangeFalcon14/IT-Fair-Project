@@ -30,8 +30,6 @@ public class TypingTestService {
 
         dto.setUserTypedSpeed(wpm);
 
-        System.err.println(noOfCharactersInMin);
-
         typingTest.setUserTypedSpeed(dto.getUserTypedSpeed());
 
         typingTestRepository.save(typingTest);
