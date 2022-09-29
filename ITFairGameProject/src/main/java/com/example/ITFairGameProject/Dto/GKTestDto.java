@@ -5,6 +5,8 @@ import lombok.Data;
 @Data
 public class GKTestDto {
 
+    private long id;
+
     private String question;
 
     private String optionA;

@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class GKTestService {
 
@@ -32,5 +36,37 @@ public class GKTestService {
         gkTestRepository.save(gkTest);
 
         return ResponseEntity.ok(dto);
+    }
+
+    //get5Questions
+    public List<GKTestDto> get5Questions() {
+
+        int firstId = 44, lastId = 63;
+
+        List<GKTestDto> toReturn = new ArrayList<>();
+
+        for (int i = 0; i <= 5; i++) {
+
+            GKTestDto dto = new GKTestDto();
+
+            long randomId = (long) (Math.random()*(lastId-firstId))+firstId;
+
+            GKTest gkTest = gkTestRepository.findById(randomId);
+
+            gkTest.setId(randomId);
+
+            dto.setId(gkTest.getId());
+            dto.setQuestion(gkTest.getQuestion());
+            dto.setOptionA(gkTest.getOptionA());
+            dto.setOptionB(gkTest.getOptionB());
+            dto.setOptionC(gkTest.getOptionC());
+            dto.setOptionD(gkTest.getOptionD());
+
+            toReturn.add(dto);
+        }
+
+        System.err.println("\n" + toReturn);
+
+        return toReturn;
     }
 }

@@ -5,9 +5,9 @@ import com.example.ITFairGameProject.Service.GKTestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 public class GKTestController {
@@ -25,5 +25,13 @@ public class GKTestController {
     public ResponseEntity saveQuestion(@RequestBody GKTestDto dto) {
 
         return gkTestService.saveQuestion(dto);
+    }
+
+    //get 5 questions
+    @GetMapping("/api/get5Questions")
+    @ResponseBody
+    public List<GKTestDto> get5Questions() {
+
+        return gkTestService.get5Questions();
     }
 }

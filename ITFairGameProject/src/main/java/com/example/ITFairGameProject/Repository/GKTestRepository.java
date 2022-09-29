@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GKTestRepository  extends JpaRepository<GKTest, Long> {
 
-
+    GKTest findById(long id);
 }
