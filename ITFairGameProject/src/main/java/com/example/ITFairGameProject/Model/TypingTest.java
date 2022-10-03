@@ -13,6 +13,9 @@ public class TypingTest {
     @GeneratedValue
     private long id;
 
+    @Column(name = "user_name")
+    private String userName;
+
     @Column(name = "user_typed")
     private String userTyped;
 

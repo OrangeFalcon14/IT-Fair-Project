@@ -9,6 +9,8 @@ public class TypingTestDto {
 
 //    private long id;
 
+    private String userName;
+
     private String userTyped;
 
     private long userTypedSpeed;
