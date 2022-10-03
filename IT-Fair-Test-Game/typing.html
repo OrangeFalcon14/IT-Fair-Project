@@ -68,6 +68,7 @@
         console.log(document.getElementById("type").disabled);
 
         function startTest() {
+            wpm = 0;
             document.getElementById("timer").innerHTML = "20s";
 
             let update_time = setInterval(() => {
@@ -97,27 +98,33 @@
         let wpm = 0;
 
         function parseText() {
-            let ideal_text = document.getElementById("text").textContent.split(" ");
+            // let ideal_text = document.getElementById("text").textContent.split(" ");
 
-            for (let i = ideal_text.length; i > 0; i--) {
-                if(ideal_text[i] == "")ideal_text.pop(i)
-            }
+            // for (let i = ideal_text.length; i > 0; i--) {
+            //     if(ideal_text[i] == "")ideal_text.pop(i)
+            // }
 
-            console.log(ideal_text);
+            // console.log(ideal_text);
 
-            let typed_text = document.getElementById("type").value;
+            // let typed_text = document.getElementById("type").value;
 
-            ideal_text/* .split(" ") */.forEach((word, index) => {
-                try{
-                    let typed_word = typed_text.split(" ")[index].toLocaleLowerCase()
-                    console.log(typed_word, word.toLocaleLowerCase());
-                    if(word.toLocaleLowerCase() == typed_word)wpm ++;
-                }catch(TypeError){
-                    return;
-                }
+            // ideal_text/* .split(" ") */.forEach((word, index) => {
+            //     try{
+            //         let typed_word = typed_text.split(" ")[index].toLocaleLowerCase()
+            //         console.log(typed_word, word.toLocaleLowerCase());
+            //         if(word.toLocaleLowerCase() == typed_word)wpm ++;
+            //     }catch(TypeError){
+            //         return;
+            //     }
+            // })
+    
+            fetch('http://localhost:8080/api/wpm').then(response =>{
+                return response.json();
+            }).then(data =>{
+                wpm = parseInt(data);
+                document.getElementById("wpm").innerHTML = "WPM: " + (wpm * 3);
             })
 
-            document.getElementById("wpm").innerHTML = "WPM: " + (wpm * 3);
         }
     </script>
 </body>
