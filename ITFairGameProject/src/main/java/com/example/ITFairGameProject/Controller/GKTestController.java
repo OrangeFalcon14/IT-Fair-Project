@@ -1,6 +1,7 @@
 package com.example.ITFairGameProject.Controller;
 
 import com.example.ITFairGameProject.Dto.GKTestDto;
+import com.example.ITFairGameProject.Dto.QuestionAnswerDto;
 import com.example.ITFairGameProject.Service.GKTestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,5 +34,12 @@ public class GKTestController {
     public List<GKTestDto> get5Questions() {
 
         return gkTestService.get5Questions();
+    }
+
+    @RequestMapping("/api/collectAnswers")
+    @PostMapping
+    public ResponseEntity calculateGKMarks(@RequestBody QuestionAnswerDto dto) {
+
+        return gkTestService.calculateGKMarks(dto);
     }
 }
