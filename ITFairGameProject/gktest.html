@@ -52,14 +52,14 @@
         //     }).then(data =>{
         //         questions = data;
         //     })
+        let current_question = 1;
+        
         let request = new XMLHttpRequest();
         request.open("GET", "http://localhost:8080/api/get5Questions", false);
         request.send();
         request.onload = () => {
             questions = JSON.parse(request.response);
         }
-        
-        let current_question = 1;
 
         function next_question() {
             if(current_question == 1){
