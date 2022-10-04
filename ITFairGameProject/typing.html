@@ -13,7 +13,6 @@
         button{
             border: 1px solid black;
             outline: none;
-            background-color: lime;
             padding: 10px;
             color: black;
             font-size: 15px;
@@ -51,7 +50,7 @@
 </head>
 <body>
     <div id="container">
-        <button onclick="startTest()">Start</button>
+        <button onclick="startTest()" style="background-color: lime;">Start</button>
         <br><br>
         <div id="timer">20s</div>
         <p>Type the following paragraphs as fast as you can without making mistakes within 20 seconds:</p>
@@ -60,6 +59,8 @@
                 </div>
             <textarea name="type" id="type" cols="30" rows="10" disabled></textarea>
             <div id="wpm"></div>
+            <br>
+            <button onclick="next_test()" style="background-color: red">Next</button>
         </div>
     </div>
     <script>
@@ -68,6 +69,7 @@
         console.log(document.getElementById("type").disabled);
 
         function startTest() {
+            wpm = 0;
             document.getElementById("timer").innerHTML = "20s";
 
             let update_time = setInterval(() => {
@@ -97,27 +99,37 @@
         let wpm = 0;
 
         function parseText() {
-            let ideal_text = document.getElementById("text").textContent.split(" ");
+            // let ideal_text = document.getElementById("text").textContent.split(" ");
 
-            for (let i = ideal_text.length; i > 0; i--) {
-                if(ideal_text[i] == "")ideal_text.pop(i)
-            }
+            // for (let i = ideal_text.length; i > 0; i--) {
+            //     if(ideal_text[i] == "")ideal_text.pop(i)
+            // }
 
-            console.log(ideal_text);
+            // console.log(ideal_text);
 
-            let typed_text = document.getElementById("type").value;
+            // let typed_text = document.getElementById("type").value;
 
-            ideal_text/* .split(" ") */.forEach((word, index) => {
-                try{
-                    let typed_word = typed_text.split(" ")[index].toLocaleLowerCase()
-                    console.log(typed_word, word.toLocaleLowerCase());
-                    if(word.toLocaleLowerCase() == typed_word)wpm ++;
-                }catch(TypeError){
-                    return;
-                }
+            // ideal_text/* .split(" ") */.forEach((word, index) => {
+            //     try{
+            //         let typed_word = typed_text.split(" ")[index].toLocaleLowerCase()
+            //         console.log(typed_word, word.toLocaleLowerCase());
+            //         if(word.toLocaleLowerCase() == typed_word)wpm ++;
+            //     }catch(TypeError){
+            //         return;
+            //     }
+            // })
+    
+            fetch('http://localhost:8080/api/wpm').then(response =>{
+                return response.json();
+            }).then(data =>{
+                wpm = parseInt(data);
+                document.getElementById("wpm").innerHTML = "WPM: " + (wpm * 3);
             })
 
-            document.getElementById("wpm").innerHTML = "WPM: " + (wpm * 3);
+        }
+
+        next_test = () => {
+            location.href = location.href.slice(0, location.href.lastIndexOf("/")) + "/gktest.html";
         }
     </script>
 </body>

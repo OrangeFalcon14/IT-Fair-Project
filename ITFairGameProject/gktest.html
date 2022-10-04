@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dire Straits - General Knowledge Test</title>
+    <style>
+        body{
+            background-color: #eee;
+            font-family: sans;
+        }
+        button{
+            border: 1px solid black;
+            outline: none;
+            padding: 10px;
+            color: black;
+            font-size: 15px;
+            border-radius: 5px;
+        }
+        #container{
+            width: 60%;
+            height: auto;
+            padding: 50px;
+            position: absolute;
+            left: 50%;
+            top: 40%;
+            text-align: center;
+            transform: translate(-50%, -50%);
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="intro">
+            <p>Welcome to GK Test!</p>
+            <p>This short quiz will test your general knowledge.</p>
+            <button style="background-color: red;" onclick="next_question()">Start</button>
+        </div>
+        <div id="outro" style="display: none;">
+            <p>That's it!</p>
+            <p>Thanks for participating in the GK test.</p>
+            <button onclick="next_test()" style="background-color: red">Next</button>
+        </div>
+    </div>
+    <script>
+        const container = document.getElementById("container");
+        const questions = JSON.parse(`
+        [
+            {
+                "question": "lorem ipsum dolor et simet",
+                "options": [
+                    "option1",
+                    "option2",
+                    "option3",
+                    "option4"
+                ]
+            },
+            {
+                "question": "lorem ipsum dolor et simet blah blah",
+                "options": [
+                    "option1",
+                    "option2",
+                    "option3",
+                    "option4"
+                ]
+            }
+        ]`)
+
+        
+        let current_question = 1;
+
+        function next_question() {
+            if(current_question == 1){
+                document.querySelector("#intro").style.display = "none";
+
+                let next_btn = document.createElement("button");
+                next_btn.id="next_btn";
+                next_btn.onclick = next_question;
+                next_btn.innerHTML = "Next";
+                container.appendChild(next_btn);
+            }
+
+            if(current_question - 1 == questions.length){
+                document.getElementById("question" + (current_question - 1)).style.display = "none";
+                document.getElementById("next_btn").style.display = "none";
+                document.querySelector("#outro").style.display = "block";
+                return;
+            }
+            
+            let question = questions[current_question - 1];
+            create_question(question);
+
+            try{
+                document.getElementById("question" + (current_question - 1)).style.display = "none";
+            }catch {
+                1 + 1;
+            }
+
+            
+            current_question ++;
+        }
+
+        function create_question(question){
+            let question_element = document.createElement("div");
+            question_element.id = "question" + current_question;
+
+            let question_label = document.createElement("p");
+            question_label.innerHTML = question.question;
+            question_element.appendChild(question_label);
+
+            let question_form = document.createElement("form");
+            question_element.appendChild(question_form)
+
+            for (let i = 0; i < question.options.length; i++) {
+                let option = document.createElement("input");
+                option.type = "radio";
+                option.value = question.options[i]
+                option.name = question.question;
+                question_form.appendChild(option);
+
+                let option_label = document.createElement("label");
+                option_label.htmlFor = option.name;
+                option_label.innerHTML = option.value;
+                question_form.appendChild(option_label);
+
+                question_form.innerHTML += "<br>";
+            }
+
+            container.appendChild(question_element)
+        }
+
+        next_test = () => {
+            location.href = location.href.slice(0, location.href.lastIndexOf("/")) + "/optical_illusion.html";
+        }
+    </script>
+</body>
+</html>
