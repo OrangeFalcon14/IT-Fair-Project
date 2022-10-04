@@ -30,7 +30,28 @@ public class TypingTestService {
 
         dto.setUserTypedSpeed(wpm);
 
+        long typingScore = 0;
+
+        if (wpm <= 20) {
+
+            typingScore = 2;
+        }
+
+        else if (wpm > 20 && wpm <= 50) {
+
+            typingScore = 3;
+        }
+
+        else if (wpm > 50) {
+
+            typingScore = 5;
+        }
+
+        dto.setUserScore(typingScore);
+
+        typingTest.setUserName(dto.getUserName());
         typingTest.setUserTypedSpeed(dto.getUserTypedSpeed());
+        typingTest.setUserScore(dto.getUserScore());
 
         typingTestRepository.save(typingTest);
 

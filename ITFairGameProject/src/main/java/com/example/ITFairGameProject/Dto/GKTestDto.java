@@ -5,8 +5,6 @@ import lombok.Data;
 @Data
 public class GKTestDto {
 
-    private String userName;
-
     private long id;
 
     private String question;

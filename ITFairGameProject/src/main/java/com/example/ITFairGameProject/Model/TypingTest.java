@@ -21,4 +21,7 @@ public class TypingTest {
 
     @Column(name = "user_typing_speed")
     private long userTypedSpeed;
+
+    @Column(name = "user_score")
+    private long userScore;
 }

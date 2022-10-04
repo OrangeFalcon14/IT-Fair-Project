@@ -15,10 +15,11 @@ public class ItFairGameController {
     @Autowired
     private ItFairGameProjectService itFairGameService;
 
-    public ItFairGameController(ItFairGameProjectService itFairGameService) {
-        this.itFairGameService = itFairGameService;
+    //saveScores
+    @RequestMapping("/api/calculateScores")
+    @PostMapping
+    public ResponseEntity calculateScores(@RequestBody ItFairGameProjectDto dto) {
+
+        return itFairGameService.calculateScores(dto);
     }
-
-    //Calculating the wpm
-
 }

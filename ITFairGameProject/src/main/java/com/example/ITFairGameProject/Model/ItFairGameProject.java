@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "IT_fair_game_project")
-public class ItFairGameProject {
+public class  ItFairGameProject {
 
     @Id
     @GeneratedValue

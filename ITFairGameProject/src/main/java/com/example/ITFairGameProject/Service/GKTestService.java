@@ -3,8 +3,10 @@ package com.example.ITFairGameProject.Service;
 import com.example.ITFairGameProject.Dto.GKTestDto;
 import com.example.ITFairGameProject.Dto.QuestionAnswerDto;
 import com.example.ITFairGameProject.Model.GKTest;
+import com.example.ITFairGameProject.Model.GKTestScores;
 import com.example.ITFairGameProject.Model.ItFairGameProject;
 import com.example.ITFairGameProject.Repository.GKTestRepository;
+import com.example.ITFairGameProject.Repository.GKTestScoresRepository;
 import com.example.ITFairGameProject.Repository.ItFairGameProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,9 @@ public class GKTestService {
 
     @Autowired
     private ItFairGameProjectRepository itFairGameProjectRepository;
+
+    @Autowired
+    private GKTestScoresRepository gkTestScoresRepository;
 
     //save question info
     public ResponseEntity saveQuestion(GKTestDto dto) {
@@ -73,7 +78,7 @@ public class GKTestService {
     public ResponseEntity calculateGKMarks(QuestionAnswerDto dto) {
 
         ItFairGameProject itFairGameProject = new ItFairGameProject();
-
+        GKTestScores gkTestScores = new GKTestScores();
         long totalMarks = 0;
         long correctAnswers = 0;
         long wrongAnswers = 0;
@@ -146,13 +151,17 @@ public class GKTestService {
             wrongAnswers += 1;
         }
 
-        itFairGameProject.setGKTestScores(totalMarks);
-
-        itFairGameProjectRepository.save(itFairGameProject);
-
         System.err.println(totalMarks);
-        System.err.println(correctAnswers);
-        System.err.println(wrongAnswers);
+
+        gkTestScores.setUserName(dto.getUserName());
+        gkTestScores.setCorrectAnswers(correctAnswers);
+        gkTestScores.setWrongAnswers(wrongAnswers);
+        gkTestScores.setTotalMarks(totalMarks);
+
+        gkTestScoresRepository.save(gkTestScores);
+
+//        itFairGameProject.setGKTestScores(totalMarks);
+//        itFairGameProjectRepository.save(itFairGameProject);
 
         return ResponseEntity.ok(dto);
     }
