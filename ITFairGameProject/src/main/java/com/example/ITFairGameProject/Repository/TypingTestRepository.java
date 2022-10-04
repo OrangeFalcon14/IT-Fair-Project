@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TypingTestRepository extends JpaRepository<TypingTest, Long> {
+
+    TypingTest findTypingTestByUserName(String userName);
 }

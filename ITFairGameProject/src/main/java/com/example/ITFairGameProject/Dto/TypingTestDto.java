@@ -2,8 +2,6 @@ package com.example.ITFairGameProject.Dto;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-
 @Data
 public class TypingTestDto {
 
@@ -14,4 +12,6 @@ public class TypingTestDto {
     private String userTyped;
 
     private long userTypedSpeed;
+
+    private long userScore;
 }

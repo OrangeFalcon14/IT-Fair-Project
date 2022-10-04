@@ -15,9 +15,6 @@ public class GKTest {
     @GeneratedValue
     private long id;
 
-    @Column(name = "user_name")
-    private String userName;
-
     @Column(name = "question")
     private String question;
 
