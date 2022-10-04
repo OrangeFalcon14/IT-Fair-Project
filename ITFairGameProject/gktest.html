@@ -45,28 +45,19 @@
     </div>
     <script>
         const container = document.getElementById("container");
-        const questions = JSON.parse(`
-        [
-            {
-                "question": "lorem ipsum dolor et simet",
-                "options": [
-                    "option1",
-                    "option2",
-                    "option3",
-                    "option4"
-                ]
-            },
-            {
-                "question": "lorem ipsum dolor et simet blah blah",
-                "options": [
-                    "option1",
-                    "option2",
-                    "option3",
-                    "option4"
-                ]
-            }
-        ]`)
+        const questions = {};
 
+        // fetch('http://localhost:8080/api/get5Questions').then(response =>{
+        //         return response.json();
+        //     }).then(data =>{
+        //         questions = data;
+        //     })
+        let request = new XMLHttpRequest();
+        request.open("GET", "http://localhost:8080/api/get5Questions", false);
+        request.send();
+        request.onload = () => {
+            questions = JSON.parse(request.response);
+        }
         
         let current_question = 1;
 
@@ -112,20 +103,44 @@
             let question_form = document.createElement("form");
             question_element.appendChild(question_form)
 
-            for (let i = 0; i < question.options.length; i++) {
-                let option = document.createElement("input");
-                option.type = "radio";
-                option.value = question.options[i]
-                option.name = question.question;
-                question_form.appendChild(option);
+            // for (let i = 0; i < question.options.length; i++) {
+            //     let option = document.createElement("input");
+            //     option.type = "radio";
+            //     option.value = question.options[i]
+            //     option.name = question.question;
+            //     question_form.appendChild(option);
 
-                let option_label = document.createElement("label");
-                option_label.htmlFor = option.name;
-                option_label.innerHTML = option.value;
-                question_form.appendChild(option_label);
+            //     let option_label = document.createElement("label");
+            //     option_label.htmlFor = option.name;
+            //     option_label.innerHTML = option.value;
+            //     question_form.appendChild(option_label);
 
-                question_form.innerHTML += "<br>";
-            }
+            //     question_form.innerHTML += "<br>";
+            // }
+
+            let option_a = document.createElement("input")
+            option_a.type = "radio";
+            option_a.value = question.optionA;
+            option_a.name = question.question;
+            question_form.appendChild(option_a);
+
+            let option_b = document.createElement("input")
+            option_b.type = "radio";
+            option_b.value = question.optionB;
+            option_b.name = question.question;
+            question_form.appendChild(option_b);
+
+            let option_c = document.createElement("input")
+            option_c.type = "radio";
+            option_c.value = question.optionC;
+            option_c.name = question.question;
+            question_form.appendChild(option_c);
+
+            let option_d = document.createElement("input")
+            option_d.type = "radio";
+            option_d.value = question.optionD;
+            option_d.name = question.question;
+            question_form.appendChild(option_d);
 
             container.appendChild(question_element)
         }
