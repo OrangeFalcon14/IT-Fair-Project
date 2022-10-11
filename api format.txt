@@ -1,0 +1,93 @@
+1. /api/wpm : 
+
+{
+"userName" : "...",
+"userTyped" : "...",
+"userTypedSpeed" : ...,
+"userScore" : ...
+}
+
+2. /api/get5Questions
+
+[
+    {
+        "id": 51,
+        "question": "What is the relationship between the weight of an object on the moon and the weight of an object on Earth?",
+        "optionA": "The weight of an object on the earth is 1/6th the weight of the same object on the moon",
+        "optionB": "The weight of an object on the moon is 1/6th the weight of the same object on the earth",
+        "optionC": "The weight of an object on the earth is 6 times the weight of the same object on the moon",
+        "optionD": "The weight of an object on the moon is 6 times the weight of the same object on the earth",
+        "answer": null
+    },
+    {
+        "id": 60,
+        "question": "What is the name of the Guptas' silver coin?",
+        "optionA": "Para",
+        "optionB": "Rupaka",
+        "optionC": "Dinara",
+        "optionD": "None of the above",
+        "answer": null
+    },
+    {
+        "id": 58,
+        "question": "In which of the following Indian states do the Varuna and Assi rivers flow?",
+        "optionA": "Uttar Pradesh",
+        "optionB": "Maharashtra",
+        "optionC": "Rajasthan",
+        "optionD": "Madhya Pradesh",
+        "answer": null
+    },
+    {
+        "id": 46,
+        "question": "The Crimson Rose belongs to which species",
+        "optionA": "Moths",
+        "optionB": "Birds",
+        "optionC": "Flowers",
+        "optionD": "Butterflies",
+        "answer": null
+    },
+    {
+        "id": 45,
+        "question": "In which Indian state is Chauri Chaura village located?",
+        "optionA": "Uttar Pradesh",
+        "optionB": "Madhya Pradesh",
+        "optionC": "Arunachal Pradesh",
+        "optionD": "Rajasthan",
+        "answer": null
+    }
+]
+
+(Note : These are 5 of the questions and the options that are there in the db)
+
+3. /api/collectAnswers
+
+{
+    "userName": "Neel",
+    "question1": 51,
+    "question2": 60,
+    "question3": 58,
+    "question4": 56,
+    "question5": 45,
+    "answer1": "b",
+    "answer2": "b",
+    "answer3": "c",
+    "answer4": "d",
+    "answer5": "a"
+}
+
+4. /api/calculateScores (Note : Still in progress, will finish once all the test functions services are written)
+
+{
+    "id": 0,
+    "userName": "Neel",
+    "typingTestScores": 0,
+    "opticalIllusionScores": 0,
+    "totalPoints": 18,
+    "userRank": 0,
+    "userTyped": null,
+    "userTypedSpeed": 0,
+    "gktestScores": 0,
+    "iqtestScores": 0
+}
+
+(Note : for the api's number 2, 3 and 4; are the values are returned)

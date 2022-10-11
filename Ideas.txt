@@ -1,8 +1,8 @@
 Ideas :
 -typing speed test(20s)(max 10  points)
--iq test(simple aptitude test)(7q)(total : 2mins)(max 20 points)
+-iq test(simple aptitude test)(5q)(total : 2mins)(max 20 points)
 -gk quiz(5ques)(1min)(max 20 points)
--optical illusion test(1ques)(20s)(max 10 points)
+-optical illusion test(5ques)(20s)(max 10 points)
 -Give the results in the end :
 >Ranking of the user
 >Total points scored by the user
