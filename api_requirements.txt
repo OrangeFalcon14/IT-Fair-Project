@@ -1,0 +1,14 @@
+1. sending username
+2. getting all usernames to check for duplicates
+
+Typing test:
+  3. sending words typed by the user to calculate wpm
+
+GKTest:
+  4. sending user's answers
+
+IQTest:
+  5. sending user's answers
+
+Optical Illusion
+  6. sending user's answers
