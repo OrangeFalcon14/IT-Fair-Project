@@ -14,7 +14,7 @@
 
         textarea_disabled  = false;
         textarea_value = "";
-        document.getElementById("type").focus();
+        setTimeout(() => document.getElementById("type").focus(), 50)
     }
 
     let update_time;
@@ -48,7 +48,7 @@
     }
 </script>
 
-<button on:click={start_test} style="background-color: lime;">Start</button>
+<button on:click|once={start_test}>Start</button>
 <br /><br />
 <div id="timer">{ timer_string }</div>
 <p>
@@ -65,11 +65,13 @@
         expedita expedita et voluptate quidem est non aut neque ipsam est
         molestias aliquam in consequatur quia incidunt reiciendis necessitatibus
     </div>
+    <br>
     <textarea name="type" id="type" cols="30" rows="10" on:paste|preventDefault={handle_paste} bind:value={textarea_value} disabled={textarea_disabled} />
+    <br><br>
     <div id="wpm">{ wpm }</div>
     <br />
     {#if test_completed}
-        <button on:click style="background-color: red">Next</button>
+        <button on:click>Next</button>
     {/if}
 </div>
 
@@ -80,17 +82,20 @@
         resize: vertical;
     }
     #text {
+        margin: 0 auto;
+        width: auto;
+        max-width: 65%;
         text-align: center;
-        left: 50%;
-        padding: 0px 170px 0px 170px;
-        /* width: 60%; */
-        font-size: 15px;
+        padding: 10px;
+        border-radius: 10px;
+        font-size: 16px;
+        background: #001d34;
     }
     #timer {
         font-size: 30px;
     }
     #test-container {
         padding: 5px;
-        background-color: #fff;
+        /* background-color: #fff; */
     }
 </style>

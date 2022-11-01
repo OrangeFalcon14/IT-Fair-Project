@@ -125,14 +125,14 @@
     <div id="intro">
         <p>Welcome to GK Test!</p>
         <p>This short quiz will test your general knowledge.</p>
-        <!-- <button style="background-color: red;" onclick="next_question()">Start</button> -->
-        <button style="background-color: red;" on:click={() => {current_question++}}>Start</button>
+        <br>
+        <button on:click={() => {current_question++}}>Start</button>
     </div>    
 {/if}
 {#if current_question > 0 && current_question - 1 !== questions.length  && questions}
     {#each questions as question (question.question)}
         {#if current_question - 1 === questions.indexOf(question)}
-            <div>
+            <div class="question">
                 <p>{question.question}</p>
                 <form>
                     <input type="radio" value={question.optionA} name={question.question}/>
@@ -148,7 +148,7 @@
                     <label>{question.optionD}</label>
                 </form>
                 <br>
-                <button style="background-color: red;" on:click={() => {current_question++}}>Next</button>
+                <button on:click={() => {current_question++}}>Next</button>
             </div>
         {/if}
     {/each}
@@ -157,6 +157,21 @@
     <div id="outro">
         <p>That's it!</p>
         <p>Thanks for participating in the GK test.</p>
-        <button on:click style="background-color: red">Next</button>
+        <button on:click>Next</button>
     </div>
 {/if}
+
+<style>
+    div{
+        position:absolute;
+        top: 50%;
+        left:50%;
+        transform: translate(-50%, -50%);
+    }
+    #intro, #outro, .question{
+        width: 50%;
+        padding: 20px;
+        border-radius: 10px;
+        background: #001d34;
+    }
+</style>

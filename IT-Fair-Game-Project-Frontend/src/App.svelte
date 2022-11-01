@@ -22,14 +22,17 @@
 
 <style>
     #container {
-        padding: 100px;
-        width: auto;
-        height: auto;
-        position: absolute;
+        padding: 50px;
+        width: 50%;
+        /* height: calc(100vh - 100px); */
+        height: calc(100% - 100px);
+        max-height: 100%;
+        /* position: absolute;
         left: 50%;
         top: 40%;
-        transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%); */
+        margin: 0 auto;
         text-align: center;
-        background-color: white;
+        overflow: auto;
     }
 </style>
