@@ -1,8 +1,12 @@
 package com.example.ITFairGameProject.Service;
 
+import com.example.ITFairGameProject.Dto.IqQuestionAnswersDto;
 import com.example.ITFairGameProject.Dto.IqTestDto;
 import com.example.ITFairGameProject.Model.IqTest;
+import com.example.ITFairGameProject.Model.IqTestScores;
+import com.example.ITFairGameProject.Model.ItFairGameProject;
 import com.example.ITFairGameProject.Repository.IqTestRepository;
+import com.example.ITFairGameProject.Repository.IqTestScoresRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,6 +19,9 @@ public class IqTestService {
 
     @Autowired
     private IqTestRepository iqTestRepository;
+
+    @Autowired
+    private IqTestScoresRepository iqTestScoresRepository;
 
     public ResponseEntity saveQuestion(IqTestDto dto) {
 
@@ -81,9 +88,51 @@ public class IqTestService {
 
                 break;
             }
-
         }
 
         return toReturn;
+    }
+
+    public ResponseEntity calculateIQMarks(IqQuestionAnswersDto dto) {
+
+//        ItFairGameProject itFairGameProject = new ItFairGameProject();
+        IqTestScores iqTestScores = new IqTestScores();
+
+        long totalMarks = 0;
+        long correctAnswers = 0;
+        long wrongAnswers = 0;
+
+        //question1
+        IqTest iqTest = iqTestRepository.findById(dto.getQuestion1());
+        if (iqTest.getAnswer().equalsIgnoreCase(dto.getAnswer1())) {
+
+            totalMarks += 5;
+            correctAnswers += 1;
+        }
+
+        else {
+            wrongAnswers += 1;
+        }
+
+        //question2
+        iqTest = iqTestRepository.findById(dto.getQuestion2());
+        if (iqTest.getAnswer().equalsIgnoreCase(dto.getAnswer2())) {
+
+            totalMarks += 5;
+            correctAnswers += 1;
+        }
+
+        else {
+            wrongAnswers += 1;
+        }
+
+        iqTestScores.setUserName(dto.getUserName());
+        iqTestScores.setCorrectAnswers(correctAnswers);
+        iqTestScores.setWrongAnswers(wrongAnswers);
+        iqTestScores.setTotalMarks(totalMarks);
+
+        iqTestScoresRepository.save(iqTestScores);
+
+        return ResponseEntity.ok(dto);
     }
 }

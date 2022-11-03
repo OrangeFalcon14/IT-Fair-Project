@@ -1,5 +1,6 @@
 package com.example.ITFairGameProject.Controller;
 
+import com.example.ITFairGameProject.Dto.IqQuestionAnswersDto;
 import com.example.ITFairGameProject.Dto.IqTestDto;
 import com.example.ITFairGameProject.Service.IqTestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +25,12 @@ public class IqTestController {
     @GetMapping("/api/get2Questions")
     public List<IqTestDto> get5Questions() {
         return iqTestService.get2Questions();
+    }
+
+    @RequestMapping("/api/collectIqAnswers")
+    @PostMapping
+    public ResponseEntity calculateIQMarks(@RequestBody IqQuestionAnswersDto dto) {
+
+        return iqTestService.calculateIQMarks(dto);
     }
 }

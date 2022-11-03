@@ -37,7 +37,7 @@ public class GKTestController {
     }
 
     //collects answers
-    @RequestMapping("/api/collectAnswers")
+    @RequestMapping("/api/collectGKAnswers")
     @PostMapping
     public ResponseEntity calculateGKMarks(@RequestBody QuestionAnswerDto dto) {
 

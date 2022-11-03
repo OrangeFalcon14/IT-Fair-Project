@@ -107,7 +107,7 @@ public class GKTestService {
     //calculate gk marks
     public ResponseEntity calculateGKMarks(QuestionAnswerDto dto) {
 
-        ItFairGameProject itFairGameProject = new ItFairGameProject();
+//        ItFairGameProject itFairGameProject = new ItFairGameProject();
         GKTestScores gkTestScores = new GKTestScores();
         long totalMarks = 0;
         long correctAnswers = 0;
@@ -195,11 +195,3 @@ public class GKTestService {
         return ResponseEntity.ok(dto);
     }
 }
-
-
-/**
- * array of used ids
- * array of used ids
- * if generated id exists in 2ed array, continue
- * else store in dto
- */
