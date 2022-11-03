@@ -32,13 +32,13 @@ public class IqTestService {
         return ResponseEntity.ok(dto);
     }
 
-    public List<IqTestDto> get5Questions() {
+    public List<IqTestDto> get2Questions() {
 
-        int firstId = 78, lastId = 85;
+        int firstId = 78, lastId = 81;
 
         List<IqTestDto> toReturn = new ArrayList<>();
 
-        for (int i = 0; i <= 5; i++) {
+//        for (int i = 0; i <= 1; i++) {
 
             IqTestDto dto = new IqTestDto();
 
@@ -55,6 +55,33 @@ public class IqTestService {
             dto.setOptionD(iqTest.getOptionD());
 
             toReturn.add(dto);
+//        }
+
+        while(1==1) {
+
+            long randomId2 = (long) (Math.random()*(lastId-firstId))+firstId;
+            dto = new IqTestDto();
+            iqTest = iqTestRepository.findById(randomId2);
+
+            if (randomId2 == randomId) {
+                continue;
+            }
+
+            else {
+
+                iqTest.setId(randomId2);
+                dto.setId(iqTest.getId());
+                dto.setQuestion(iqTest.getQuestion());
+                dto.setOptionA(iqTest.getOptionA());
+                dto.setOptionB(iqTest.getOptionB());
+                dto.setOptionC(iqTest.getOptionC());
+                dto.setOptionD(iqTest.getOptionD());
+
+                toReturn.add(dto);
+
+                break;
+            }
+
         }
 
         return toReturn;

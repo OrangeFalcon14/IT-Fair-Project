@@ -21,8 +21,8 @@ public class IqTestController {
         return iqTestService.saveQuestion(dto);
     }
 
-    @GetMapping("/api/get5questions")
+    @GetMapping("/api/get2Questions")
     public List<IqTestDto> get5Questions() {
-        return iqTestService.get5Questions();
+        return iqTestService.get2Questions();
     }
 }
