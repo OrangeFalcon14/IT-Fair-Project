@@ -9,8 +9,6 @@ import javax.persistence.*;
 @Table(name = "GK_test_info")
 public class GKTest {
 
-    //All questions will be mcq's only
-
     @Id
     @GeneratedValue
     private long id;
