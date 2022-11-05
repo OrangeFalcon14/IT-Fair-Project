@@ -51,22 +51,52 @@ public class GKTestService {
 
         List<GKTestDto> toReturn = new ArrayList<>();
 
-        for (int i = 0; i <= 5; i++) {
+        List<Long> usedId = new ArrayList<Long>();
+
+        for (int i = 0; i <= 4; i++) {
 
             GKTestDto dto = new GKTestDto();
 
-            long randomId = (long) (Math.random()*(lastId-firstId))+firstId;
+            long randomId = 0;
 
-            GKTest gkTest = gkTestRepository.findById(randomId);
+//            GKTest gkTest = gkTestRepository.findById(randomId);
+//
+//            gkTest.setId(randomId);
+//
+//            dto.setId(gkTest.getId());
+//            dto.setQuestion(gkTest.getQuestion());
+//            dto.setOptionA(gkTest.getOptionA());
+//            dto.setOptionB(gkTest.getOptionB());
+//            dto.setOptionC(gkTest.getOptionC());
+//            dto.setOptionD(gkTest.getOptionD());
+//
+//            usedId.add(dto.getId());
 
-            gkTest.setId(randomId);
+            while (1==1) {
+                randomId = (long) (Math.random()*(lastId-firstId))+firstId;
 
-            dto.setId(gkTest.getId());
-            dto.setQuestion(gkTest.getQuestion());
-            dto.setOptionA(gkTest.getOptionA());
-            dto.setOptionB(gkTest.getOptionB());
-            dto.setOptionC(gkTest.getOptionC());
-            dto.setOptionD(gkTest.getOptionD());
+                GKTest gkTest = gkTestRepository.findById(randomId);
+
+                if (usedId.contains(randomId)) {
+
+                    continue;
+                }
+
+                else {
+                    gkTest.setId(randomId);
+
+                    dto.setId(gkTest.getId());
+                    dto.setQuestion(gkTest.getQuestion());
+                    dto.setOptionA(gkTest.getOptionA());
+                    dto.setOptionB(gkTest.getOptionB());
+                    dto.setOptionC(gkTest.getOptionC());
+                    dto.setOptionD(gkTest.getOptionD());
+
+                    usedId.add(dto.getId());
+
+                    break;
+                }
+            }
 
             toReturn.add(dto);
         }
@@ -77,7 +107,7 @@ public class GKTestService {
     //calculate gk marks
     public ResponseEntity calculateGKMarks(QuestionAnswerDto dto) {
 
-        ItFairGameProject itFairGameProject = new ItFairGameProject();
+//        ItFairGameProject itFairGameProject = new ItFairGameProject();
         GKTestScores gkTestScores = new GKTestScores();
         long totalMarks = 0;
         long correctAnswers = 0;
@@ -151,7 +181,6 @@ public class GKTestService {
             wrongAnswers += 1;
         }
 
-        System.err.println(totalMarks);
 
         gkTestScores.setUserName(dto.getUserName());
         gkTestScores.setCorrectAnswers(correctAnswers);
