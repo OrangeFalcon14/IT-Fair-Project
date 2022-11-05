@@ -3,6 +3,7 @@
     import Typing from './views/Typing.svelte';
     import GKTest from "./views/GKTest.svelte";
     import IQTest from "./views/IQTest.svelte";
+    import OpticalIllusion from "./views/OpticalIllusion.svelte";
 
     let views = ["welcome", "typing", "gktest", "optical_illusion", "iq_test"];
     let currentTest = 0;
@@ -20,6 +21,8 @@
         <GKTest on:click={next_test}/>
     {:else if currentTest == 3}
         <IQTest on:click={next_test} />
+    {:else if currentTest == 4}
+        <OpticalIllusion on:click={next_test} />
     {/if}
 </div>
 
