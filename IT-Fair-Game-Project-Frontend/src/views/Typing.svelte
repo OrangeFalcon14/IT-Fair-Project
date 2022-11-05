@@ -85,11 +85,11 @@
         margin: 0 auto;
         width: auto;
         max-width: 65%;
-        text-align: center;
+        text-align: left;
         padding: 10px;
         border-radius: 10px;
-        font-size: 16px;
-        background: #001d34;
+        font-size: 18px;
+        /* background: #001d34; */
     }
     #timer {
         font-size: 30px;

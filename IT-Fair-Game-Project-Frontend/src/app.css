@@ -8,7 +8,9 @@ html, body{
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  color: #eee;
+  /* color: #eee; */
+  /* color: #fbae3c; */
+  color: #ddd;
 }
 
 button{
