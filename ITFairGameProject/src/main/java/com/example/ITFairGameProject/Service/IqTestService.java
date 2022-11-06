@@ -16,52 +16,29 @@ import java.util.List;
 
 @Service
 public class IqTestService {
-
-    @Autowired
-    private IqTestRepository iqTestRepository;
-
-    @Autowired
-    private IqTestScoresRepository iqTestScoresRepository;
-
-    public ResponseEntity saveQuestion(IqTestDto dto) {
-
-        IqTest iqTest = new IqTest();
-
-        iqTest.setQuestion(dto.getQuestion());
-        iqTest.setOptionA(dto.getOptionA());
-        iqTest.setOptionB(dto.getOptionB());
-        iqTest.setOptionC(dto.getOptionC());
-        iqTest.setOptionD(dto.getOptionD());
-        iqTest.setAnswer(dto.getAnswer());
-
-        iqTestRepository.save(iqTest);
-
-        return ResponseEntity.ok(dto);
-    }
-
     public List<IqTestDto> get2Questions() {
 
-        int firstId = 78, lastId = 81;
+        int firstId = 8, lastId = 11;
 
         List<IqTestDto> toReturn = new ArrayList<>();
 
 //        for (int i = 0; i <= 1; i++) {
 
-            IqTestDto dto = new IqTestDto();
+        IqTestDto dto = new IqTestDto();
 
-            long randomId = (long) (Math.random()*(lastId-firstId))+firstId;
+        long randomId = (long) (Math.random()*(lastId-firstId))+firstId;
 
-            IqTest iqTest = iqTestRepository.findById(randomId);
+        IqTest iqTest = iqTestRepository.findById(randomId);
 
-            iqTest.setId(randomId);
-            dto.setId(iqTest.getId());
-            dto.setQuestion(iqTest.getQuestion());
-            dto.setOptionA(iqTest.getOptionA());
-            dto.setOptionB(iqTest.getOptionB());
-            dto.setOptionC(iqTest.getOptionC());
-            dto.setOptionD(iqTest.getOptionD());
+        iqTest.setId(randomId);
+        dto.setId(iqTest.getId());
+        dto.setQuestion(iqTest.getQuestion());
+        dto.setOptionA(iqTest.getOptionA());
+        dto.setOptionB(iqTest.getOptionB());
+        dto.setOptionC(iqTest.getOptionC());
+        dto.setOptionD(iqTest.getOptionD());
 
-            toReturn.add(dto);
+        toReturn.add(dto);
 //        }
 
         while(1==1) {
@@ -91,6 +68,29 @@ public class IqTestService {
         }
 
         return toReturn;
+    }
+
+
+    @Autowired
+    private IqTestRepository iqTestRepository;
+
+    @Autowired
+    private IqTestScoresRepository iqTestScoresRepository;
+
+    public ResponseEntity saveQuestion(IqTestDto dto) {
+
+        IqTest iqTest = new IqTest();
+
+        iqTest.setQuestion(dto.getQuestion());
+        iqTest.setOptionA(dto.getOptionA());
+        iqTest.setOptionB(dto.getOptionB());
+        iqTest.setOptionC(dto.getOptionC());
+        iqTest.setOptionD(dto.getOptionD());
+        iqTest.setAnswer(dto.getAnswer());
+
+        iqTestRepository.save(iqTest);
+
+        return ResponseEntity.ok(dto);
     }
 
     public ResponseEntity calculateIQMarks(IqQuestionAnswersDto dto) {
