@@ -1,0 +1,107 @@
+1. http://localhost:8080/api/wpm
+
+Request :
+{
+	"userName" : "...",
+	"userTyped" : "..."
+}
+
+Response :
+{
+	"userName" : "...",
+	"userTyped" : "......",
+	"userTypedSpeed" : ....,
+	"userScore" : ...
+}
+
+2. http://localhost:8080/api/get5Questions
+
+Request :(none)
+
+Response :
+[
+	{
+		id : ...,
+		"question" : "...",
+		"optionA" : "...",
+		"optionB" : "...",
+		"optionC" : "...",
+		"optionD" : "...",
+		"answer" : null
+	},
+
+	{
+		id : ...,
+		"question" : "...",
+		"optionA" : "...",
+		"optionB" : "...",
+		"optionC" : "...",
+		"optionD" : "...",
+		"answer" : null
+	},
+
+	{
+		id : ...,
+		"question" : "...",
+		"optionA" : "...",
+		"optionB" : "...",
+		"optionC" : "...",
+		"optionD" : "...",
+		"answer" : null
+	},
+
+	{
+		id : ...,
+		"question" : "...",
+		"optionA" : "...",
+		"optionB" : "...",
+		"optionC" : "...",
+		"optionD" : "...",
+		"answer" : null
+	},
+
+	{
+		id : ...,
+		"question" : "...",
+		"optionA" : "...",
+		"optionB" : "...",
+		"optionC" : "...",
+		"optionD" : "...",
+		"answer" : null
+	}
+
+]
+
+3. http://localhost:8080/api/collectGKAnswers
+
+Request :
+{
+	"userName" : "...",
+	"question1" : ..., //(basically all means question id, for all 5 of them, answer means the option : A, B, C or D)
+	"question2" : ...,
+	"question3" : ...,
+	"question4" : ...,
+	"question5" : ...,
+	"answer1" : "...",
+	"answer2" : "...",
+	"answer3" : "...",
+	"answer4" : "...",
+	"answer5" : "..."
+}
+
+Response :
+{
+	"userName" : "...",
+	"question1" : ..., //(basically all means question id, for all 5 of them, answer means the option : A, B, C or D)
+	"question2" : ...,
+	"question3" : ...,
+	"question4" : ...,
+	"question5" : ...,
+	"answer1" : "...",
+	"answer2" : "...",
+	"answer3" : "...",
+	"answer4" : "...",
+	"answer5" : "..."
+}
+
+4. 
