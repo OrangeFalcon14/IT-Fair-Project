@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class OpticalIllusionService {
 
@@ -28,4 +30,15 @@ public class OpticalIllusionService {
 
         return ResponseEntity.ok(dto);
     }
+
+//    //get5Questions
+//    public List<OpticalIllusionTestDto> get5Questions() {
+//
+//    }
+//
+//    //calculate the answers
+//    public ResponseEntity calculateOpticalIllusionMarks() {
+//
+//
+//    }
 }

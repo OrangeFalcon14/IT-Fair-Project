@@ -1,0 +1,31 @@
+to check the data in the typing test table :
+
+select * from typing_test_info;
+
+to check the questions of the gk test :
+
+select * from gk_test_info;
+
+to check the questions of the optical illusion test :
+
+select * from optical_illusion_test;
+
+to check the data of the gk test (like the answers returned) :
+
+select * from gk_test_scores;
+
+to check the data of the optical illusion test : (erased, will write the code and update)
+
+to check the questions of the iq test :
+
+select * from iq_test;
+
+to check the data of the iq test :
+ 
+select * frm iq_test_score;
+
+to check the overall data (total score of the user) :
+
+select * from it_fair_game_project
+
+all of the lines of code are to be pasted in a script file
