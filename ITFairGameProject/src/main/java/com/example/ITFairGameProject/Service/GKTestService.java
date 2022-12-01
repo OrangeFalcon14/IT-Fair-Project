@@ -59,19 +59,6 @@ public class GKTestService {
 
             long randomId = 0;
 
-//            GKTest gkTest = gkTestRepository.findById(randomId);
-//
-//            gkTest.setId(randomId);
-//
-//            dto.setId(gkTest.getId());
-//            dto.setQuestion(gkTest.getQuestion());
-//            dto.setOptionA(gkTest.getOptionA());
-//            dto.setOptionB(gkTest.getOptionB());
-//            dto.setOptionC(gkTest.getOptionC());
-//            dto.setOptionD(gkTest.getOptionD());
-//
-//            usedId.add(dto.getId());
-
             while (1==1) {
                 randomId = (long) (Math.random()*(lastId-firstId))+firstId;
 

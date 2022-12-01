@@ -16,66 +16,58 @@ import java.util.List;
 
 @Service
 public class IqTestService {
-    public List<IqTestDto> get2Questions() {
-
-        int firstId = 8, lastId = 11;
-
-        List<IqTestDto> toReturn = new ArrayList<>();
-
-//        for (int i = 0; i <= 1; i++) {
-
-        IqTestDto dto = new IqTestDto();
-
-        long randomId = (long) (Math.random()*(lastId-firstId))+firstId;
-
-        IqTest iqTest = iqTestRepository.findById(randomId);
-
-        iqTest.setId(randomId);
-        dto.setId(iqTest.getId());
-        dto.setQuestion(iqTest.getQuestion());
-        dto.setOptionA(iqTest.getOptionA());
-        dto.setOptionB(iqTest.getOptionB());
-        dto.setOptionC(iqTest.getOptionC());
-        dto.setOptionD(iqTest.getOptionD());
-
-        toReturn.add(dto);
-//        }
-
-        while(1==1) {
-
-            long randomId2 = (long) (Math.random()*(lastId-firstId))+firstId;
-            dto = new IqTestDto();
-            iqTest = iqTestRepository.findById(randomId2);
-
-            if (randomId2 == randomId) {
-                continue;
-            }
-
-            else {
-
-                iqTest.setId(randomId2);
-                dto.setId(iqTest.getId());
-                dto.setQuestion(iqTest.getQuestion());
-                dto.setOptionA(iqTest.getOptionA());
-                dto.setOptionB(iqTest.getOptionB());
-                dto.setOptionC(iqTest.getOptionC());
-                dto.setOptionD(iqTest.getOptionD());
-
-                toReturn.add(dto);
-
-                break;
-            }
-        }
-
-        return toReturn;
-    }
-
 
     @Autowired
     private IqTestRepository iqTestRepository;
 
     @Autowired
     private IqTestScoresRepository iqTestScoresRepository;
+
+    public List<IqTestDto> get2Questions() {
+
+        int firstId = 8, lastId = 18;
+
+        List<IqTestDto> toReturn = new ArrayList<>();
+
+        List<Long> usedId = new ArrayList<>();
+
+        for (int i = 0; i <= 4; i++) {
+
+            IqTestDto dto = new IqTestDto();
+
+            long randomId = 0;
+
+            while (1==1) {
+
+                randomId = (long) (Math.random()*(lastId-firstId))+firstId;
+
+                IqTest iqTest = iqTestRepository.findById(randomId);
+
+                if (usedId.contains(randomId)) {
+                    continue;
+                }
+
+                else {
+
+                    iqTest.setId(randomId);
+                    dto.setId(iqTest.getId());
+                    dto.setQuestion(iqTest.getQuestion());
+                    dto.setOptionA(iqTest.getOptionA());
+                    dto.setOptionB(iqTest.getOptionB());
+                    dto.setOptionC(iqTest.getOptionC());
+                    dto.setOptionD(iqTest.getOptionD());
+
+                    usedId.add(dto.getId());
+
+                    break;
+                }
+            }
+
+            toReturn.add(dto);
+        }
+
+        return toReturn;
+    }
 
     public ResponseEntity saveQuestion(IqTestDto dto) {
 
@@ -95,7 +87,6 @@ public class IqTestService {
 
     public ResponseEntity calculateIQMarks(IqQuestionAnswersDto dto) {
 
-//        ItFairGameProject itFairGameProject = new ItFairGameProject();
         IqTestScores iqTestScores = new IqTestScores();
 
         long totalMarks = 0;
@@ -106,7 +97,7 @@ public class IqTestService {
         IqTest iqTest = iqTestRepository.findById(dto.getQuestion1());
         if (iqTest.getAnswer().equalsIgnoreCase(dto.getAnswer1())) {
 
-            totalMarks += 5;
+            totalMarks += 4;
             correctAnswers += 1;
         }
 
@@ -118,7 +109,43 @@ public class IqTestService {
         iqTest = iqTestRepository.findById(dto.getQuestion2());
         if (iqTest.getAnswer().equalsIgnoreCase(dto.getAnswer2())) {
 
-            totalMarks += 5;
+            totalMarks += 4;
+            correctAnswers += 1;
+        }
+
+        else {
+            wrongAnswers += 1;
+        }
+
+        //question3
+        iqTest = iqTestRepository.findById(dto.getQuestion3());
+        if (iqTest.getAnswer().equalsIgnoreCase(dto.getAnswer3())) {
+
+            totalMarks += 4;
+            correctAnswers += 1;
+        }
+
+        else {
+            wrongAnswers += 1;
+        }
+
+        //question4
+        iqTest = iqTestRepository.findById(dto.getQuestion4());
+        if (iqTest.getAnswer().equalsIgnoreCase(dto.getAnswer4())) {
+
+            totalMarks += 4;
+            correctAnswers += 1;
+        }
+
+        else {
+            wrongAnswers += 1;
+        }
+
+        //question5
+        iqTest = iqTestRepository.findById(dto.getQuestion5());
+        if (iqTest.getAnswer().equalsIgnoreCase(dto.getAnswer5())) {
+
+            totalMarks += 4;
             correctAnswers += 1;
         }
 
