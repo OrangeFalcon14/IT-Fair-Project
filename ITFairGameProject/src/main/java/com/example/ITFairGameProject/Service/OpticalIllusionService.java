@@ -24,6 +24,8 @@ public class OpticalIllusionService {
         opticalIllusionTest.setQuestion(dto.getQuestion());
         opticalIllusionTest.setOptionA(dto.getOptionA());
         opticalIllusionTest.setOptionB(dto.getOptionB());
+        opticalIllusionTest.setOptionC(dto.getOptionC());
+        opticalIllusionTest.setOptionD(dto.getOptionD());
         opticalIllusionTest.setAnswer(dto.getAnswer());
 
         opticalIllusionRepository.save(opticalIllusionTest);
@@ -31,7 +33,7 @@ public class OpticalIllusionService {
         return ResponseEntity.ok(dto);
     }
 
-//    //get5Questions
+    //get5Questions
 //    public List<OpticalIllusionTestDto> get5Questions() {
 //
 //    }
