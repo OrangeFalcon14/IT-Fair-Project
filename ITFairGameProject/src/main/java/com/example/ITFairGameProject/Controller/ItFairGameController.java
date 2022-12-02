@@ -1,6 +1,7 @@
 package com.example.ITFairGameProject.Controller;
 
 import com.example.ITFairGameProject.Dto.ItFairGameProjectDto;
+import com.example.ITFairGameProject.Dto.UserNameDto;
 import com.example.ITFairGameProject.Service.ItFairGameProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,14 @@ public class ItFairGameController {
 
     @Autowired
     private ItFairGameProjectService itFairGameService;
+
+    //createUser
+    @RequestMapping("/api/userName")
+    @PostMapping
+    public ResponseEntity userName(@RequestBody UserNameDto dto) {
+
+        return itFairGameService.userName(dto);
+    }
 
     //saveScores
     @RequestMapping("/api/calculateScores")
