@@ -1,4 +1,5 @@
 <script>
+    export let username;
     function start_test() {
         wpm = 0;
 
@@ -32,10 +33,20 @@
     $: timer_string = `${timer}s`;
 
     function parse_text() {
-        fetch('http://localhost:8080/api/wpm').then(response =>{
+        fetch('http://localhost:8080/api/wpm',{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+            },
+            body: JSON.stringify({
+                userName: username,
+                userTyped: textarea_value
+            })
+        }).then(response =>{
             return response.json();
         }).then(data =>{
-            wpm = parseInt(data.userScore);
+            wpm = parseInt(data.userTypedSpeed);
         })
 
     }
@@ -68,7 +79,7 @@
     <br>
     <textarea name="type" id="type" cols="30" rows="10" on:paste|preventDefault={handle_paste} bind:value={textarea_value} disabled={textarea_disabled} />
     <br><br>
-    <div id="wpm">{ wpm }</div>
+    <div id="wpm">Score: { wpm }</div>
     <br />
     {#if test_completed}
         <button on:click>Next</button>

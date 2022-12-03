@@ -7,22 +7,32 @@
 
     let views = ["welcome", "typing", "gktest", "optical_illusion", "iq_test"];
     let currentTest = 0;
-    let next_test = () => {
+
+    let userDetails = {
+        userName: null,
+        userTyped: null,
+        
+    }
+
+    let next_test = (event = null) => {
+        if(event !== null){
+            userDetails.userName = event.detail;
+        }
         currentTest++;
     };
 </script>
 
 <div id="container">
     {#if currentTest == 0}
-        <Welcome on:click={next_test} />
+        <Welcome on:start={next_test} />
     {:else if currentTest == 1}
-        <Typing on:click={next_test} />
+        <Typing username={userDetails.userName} on:click={next_test} />
     {:else if currentTest == 2}
-        <GKTest on:click={next_test}/>
+        <GKTest username={userDetails.userName} on:click={next_test}/>
     {:else if currentTest == 3}
-        <IQTest on:click={next_test} />
+        <IQTest username={userDetails.userName} on:click={next_test} />
     {:else if currentTest == 4}
-        <OpticalIllusion on:click={next_test} />
+        <OpticalIllusion username={userDetails.userName} on:click={next_test} />
     {/if}
 </div>
 
@@ -39,6 +49,6 @@
         transform: translate(-50%, -50%); */
         margin: 0 auto;
         text-align: center;
-        overflow: auto;
+        overflow: hidden;
     }
 </style>
