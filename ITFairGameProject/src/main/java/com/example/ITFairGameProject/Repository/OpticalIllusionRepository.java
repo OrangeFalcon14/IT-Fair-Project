@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OpticalIllusionRepository extends JpaRepository<OpticalIllusionTest, Long> {
+
+    OpticalIllusionTest findById(long id);
 }
