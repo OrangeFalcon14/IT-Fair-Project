@@ -33,6 +33,30 @@
     $: timer_string = `${timer}s`;
 
     function parse_text() {
+        let correct_words = "";
+
+        let ideal_text = document.getElementById("text").textContent.split(" ");
+
+        for (let i = ideal_text.length; i > 0; i--) {
+            if(ideal_text[i] == "")ideal_text.splice(i, 1);
+        }
+
+        console.log(ideal_text);
+
+        let typed_text = document.getElementById("type").value;
+
+        ideal_text/* .split(" ") */.forEach((word, index) => {
+            try{
+                let typed_word = typed_text.split(" ")[index].toLocaleLowerCase()
+                console.log(typed_word, word.toLocaleLowerCase());
+                if(word.toLocaleLowerCase() == typed_word)correct_words += " " + typed_word;
+            }catch(TypeError){
+                return;
+            }
+        })
+
+        console.log(correct_words);
+
         fetch('http://localhost:8080/api/wpm',{
             method: "POST",
             headers: {
@@ -41,7 +65,7 @@
             },
             body: JSON.stringify({
                 userName: username,
-                userTyped: textarea_value
+                userTyped: correct_words
             })
         }).then(response =>{
             return response.json();
