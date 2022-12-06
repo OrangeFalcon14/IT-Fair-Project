@@ -41,10 +41,10 @@ public class ItFairGameProjectService {
 
         if (userNames.contains(userName)) {
 
-            userName = userName+random.nextInt();
-            userNames.add(userName);
+//            userName = userName+random.nextInt();
+//            userNames.add(userName);
             userNameDto.setUserName(userName);
-            userNameDto.setStatus("UNSUCCESSFUL, CHANGED USERNAME TO : " + userNameDto.getUserName());
+            userNameDto.setStatus("UNSUCCESSFUL, CHANGE USERNAME");
         }
 
         else {
@@ -53,6 +53,8 @@ public class ItFairGameProjectService {
             userNameDto.setUserName(userName);
             userNameDto.setStatus("SUCCESSFUL");
         }
+
+        System.err.println(userNames);
 
         return ResponseEntity.ok(userNameDto);
     }
