@@ -48,7 +48,7 @@ const handlePaste = (event) => {
 
 type.addEventListener("paste", handlePaste)
 
-const go = (options) => {
+const go = async (options) => {
     if(options.from === "username-inp-box"){
         let usernameFromInp = usernameInp.value;
         if(usernameFromInp.trim() === ""){
@@ -56,7 +56,7 @@ const go = (options) => {
             usernameError.style.display = "block";
             return;
         }else{
-            fetch("http://localhost:8080/api/userName", {
+            let call = await fetch("http://localhost:8080/api/userName", {
                 method: "POST",
                 headers: {
                 "Content-Type": "application/json",
@@ -65,17 +65,15 @@ const go = (options) => {
                 body: JSON.stringify({
                     userName: usernameFromInp,
                 })
-            }).then(response => {
-                return response.json();
-            }).then(data => {
-                if(data.status !== "SUCCESSFUL"){
-                    usernameError.innerHTML = "That username isn't available! Please choose another one.";
-                    usernameError.style.display = "block";
-                    return;
-                }else {
-                    username = date.userName;
-                }
-            });
+            })
+            let response = await call.json();
+            if(response.status !== "SUCCESSFUL"){
+                usernameError.innerHTML = "That username isn't available! Please choose another one.";
+                usernameError.style.display = "block";
+                return;
+            }else {
+                username = response.userName;
+            }
         }
     }else if(options.from === "typing-test-box"){
         let msg_output = document.querySelector("#typing-test-result-box h3");
