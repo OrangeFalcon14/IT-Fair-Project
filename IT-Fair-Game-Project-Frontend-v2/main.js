@@ -77,13 +77,13 @@ const go = async (options) => {
         }
     }else if(options.from === "typing-test-box"){
         let msg_output = document.querySelector("#typing-test-result-box h3");
-        msg_output.innerHTML = (score > 3) ? randomElement(compliments) : "Better luck next time!";
-        msg_output.classList.add((score > 3) ? "success" : "failure");
+        msg_output.innerHTML = (score > 2) ? randomElement(compliments) : "Better luck next time!";
+        msg_output.classList.add((score > 2) ? "success" : "failure");
 
         document.querySelector("#typing-test-result-box h5:nth-of-type(1)").innerHTML += `<p style="font-size: 18px;">${score}</p>`;
         document.querySelector("#typing-test-result-box h5:nth-of-type(2)").innerHTML += `<p style="font-size: 18px;">${wpm}</p>`;
 
-        if(score > 3) document.querySelector("#typing-test-result-box img:nth-of-type(1)").style.display = "block";
+        if(score > 2) document.querySelector("#typing-test-result-box img:nth-of-type(1)").style.display = "block";
         else document.querySelector("#typing-test-result-box img:nth-of-type(2)").style.display = "block";
     }
 
