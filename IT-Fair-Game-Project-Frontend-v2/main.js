@@ -8,24 +8,74 @@ const type = document.querySelector("#type");
 const text = document.querySelector("#text");
 const circleAnimation = document.querySelector("#circle-animation");
 
-let timer = 1;
+let timer = 20;
+let updateCountdown;
 
-let score = 5;
-let wpm = 50;
+let score = 0;
+let wpm = 0;
+let username;
 
 const randomElement = (array) => {
     return array.at(Math.floor(Math.random() * array.length));
 }
 
+const handlePaste = (event) => {
+    event.preventDefault();
+    
+    alert("We don't tolerate cheaters. Get lost!");
+    clearInterval(updateCountdown);
+    countdown.style.display = "none";
+    document.querySelector("#typing-test-scores-btn").style.display = "inline";
+    timer = 0;
+
+    fetch('http://localhost:8080/api/wpm',{
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+            userName: username,
+            userTyped: ""
+        })
+    }).then(response =>{
+        return response.json();
+    }).then(data =>{
+        score = parseInt(data.userScore);
+        wpm = parseInt(data.userTypedSpeed);
+    })
+}
+
+type.addEventListener("paste", handlePaste)
+
 const go = (options) => {
     if(options.from === "username-inp-box"){
-        let username = usernameInp.value;
-        if(username.trim() === ""){
+        let usernameFromInp = usernameInp.value;
+        if(usernameFromInp.trim() === ""){
             usernameError.innerHTML = "Please enter a username to proceed!";
             usernameError.style.display = "block";
             return;
         }else{
-            // call api for duplicate username
+            fetch("http://localhost:8080/api/userName", {
+                method: "POST",
+                headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                },
+                body: JSON.stringify({
+                    userName: usernameFromInp,
+                })
+            }).then(response => {
+                return response.json();
+            }).then(data => {
+                if(data.status !== "SUCCESSFUL"){
+                    usernameError.innerHTML = "That username isn't available! Please choose another one.";
+                    usernameError.style.display = "block";
+                    return;
+                }else {
+                    username = date.userName;
+                }
+            });
         }
     }else if(options.from === "typing-test-box"){
         let msg_output = document.querySelector("#typing-test-result-box h3");
