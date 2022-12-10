@@ -8,12 +8,23 @@ const type = document.querySelector("#type");
 const text = document.querySelector("#text");
 const circleAnimation = document.querySelector("#circle-animation");
 
+const questionsContainer = document.querySelector(".question-container");
+const questionHeading = document.querySelector(".question-container h3");
+const optionsContainer = document.querySelector(".question-container .options-container");
+const questionNumberDisplay = document.querySelector(".question-container span");
+const nextQuestionButton = document.querySelector("#next-question-btn");
+
 let timer = 20;
 let updateCountdown;
 
 let score = 0;
 let wpm = 0;
 let username;
+
+let questionNumber = 1;
+let currentQuestion =  0;
+
+let answers = {};
 
 const randomElement = (array) => {
     return array.at(Math.floor(Math.random() * array.length));
@@ -47,6 +58,91 @@ const handlePaste = (event) => {
 }
 
 type.addEventListener("paste", handlePaste)
+
+const collectAnswer = (element) => {
+    nextQuestionButton.disabled = false;
+    let question; // = element.parentElement.parentElement.querySelector("h3").innerHTML.slice(1, 2).trim();
+    questions.forEach((i) => {
+        if(i.question.slice(0, -1).trim() === element.parentElement.parentElement.querySelector("h3").innerHTML.slice(4, -1).trim()){
+            question = i.id;
+        }
+    })
+    
+    answers.userName = username;
+    if (currentQuestion == "1") {
+        if(answers.answer1) return;
+        answers.question1 = question;
+        answers.answer1 = element.innerHTML.at(0);
+    }else if (currentQuestion == "2") {
+        if(answers.answer2) return;
+        answers.question2 = question;
+        answers.answer2 = element.innerHTML.at(0);
+    }else if (currentQuestion == "3") {
+        if(answers.answer3) return;
+        answers.question3 = question;
+        answers.answer3 = element.innerHTML.at(0);
+    }else if (currentQuestion == "4") {
+        if(answers.answer4) return;
+        answers.question4 = question;
+        answers.answer4 = element.innerHTML.at(0);
+    }else if (currentQuestion == "5") {
+        if(answers.answer5) return;
+        answers.question5 = question;
+        answers.answer5 = element.innerHTML.at(0);
+    }/* else if (currentQuestion == "6") {
+        if(answers.answer6) return;
+        answers.question6 = question;
+        answers.answer6 = element.innerHTML.at(0);
+    } */
+    
+    if(questions.find( element => element.id == question).answer === element.innerHTML.at(0)){
+        element.classList.add("success")
+    }else{
+        element.classList.add("failure")
+    }
+
+    console.log(answers);
+}
+
+const nextQuestion = () => {
+    if (currentQuestion == 5) {
+        fetch('http://localhost:8080/api/collectGKAnswers',{
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify(answers)
+        })
+        go({to : "gktest-result-box", from : "gktest-box"});
+        return;
+    }
+
+    nextQuestionButton.disabled = true;
+
+    questionHeading.innerHTML = `Q${questionNumber}. ${questions[currentQuestion].question}`;
+    
+    optionsContainer.querySelector(":nth-child(1)").innerHTML = "a. " + questions[currentQuestion].optionA;
+    optionsContainer.querySelector(":nth-child(2)").innerHTML = "b. " + questions[currentQuestion].optionB;
+    optionsContainer.querySelector(":nth-child(3)").innerHTML = "c. " + questions[currentQuestion].optionC;
+    optionsContainer.querySelector(":nth-child(4)").innerHTML = "d. " + questions[currentQuestion].optionD;
+
+    optionsContainer.querySelector(":nth-child(1)").classList.remove("failure")
+    optionsContainer.querySelector(":nth-child(2)").classList.remove("failure")
+    optionsContainer.querySelector(":nth-child(3)").classList.remove("failure")
+    optionsContainer.querySelector(":nth-child(4)").classList.remove("failure")
+
+    optionsContainer.querySelector(":nth-child(1)").classList.remove("success")
+    optionsContainer.querySelector(":nth-child(2)").classList.remove("success")
+    optionsContainer.querySelector(":nth-child(3)").classList.remove("success")
+    optionsContainer.querySelector(":nth-child(4)").classList.remove("success")
+
+
+    questionNumberDisplay.innerHTML = `Question ${questionNumber} of 5`;
+
+    currentQuestion++;
+    questionNumber++;
+}
 
 const go = async (options) => {
     if(options.from === "username-inp-box"){
@@ -85,6 +181,14 @@ const go = async (options) => {
 
         if(score > 2) document.querySelector("#typing-test-result-box img:nth-of-type(1)").style.display = "block";
         else document.querySelector("#typing-test-result-box img:nth-of-type(2)").style.display = "block";
+    }else if(options.from === "gktest-instructions-box"){
+        let request = await fetch("http://localhost:8080/api/get5Questions");
+        let response = await request.json();
+        questions = response;
+        questions.sort((a,b) => {
+            return a.id - b.id;
+        })
+        nextQuestion();
     }
 
     let to = document.querySelector(`#${options.to}`);
