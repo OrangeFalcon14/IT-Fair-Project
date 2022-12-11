@@ -95,10 +95,10 @@ const collectAnswer = (element) => {
         answers.answer6 = element.innerHTML.at(0);
     } */
     
-    if(questions.find( element => element.id == question).answer === element.innerHTML.at(0)){
-        element.classList.add("success")
+    if(questions.find( element => element.id == question).answer.toLocaleLowerCase() === element.innerHTML.at(0)){
+        element.classList.add("correct")
     }else{
-        element.classList.add("failure")
+        element.classList.add("incorrect")
     }
 
     console.log(answers);
@@ -127,15 +127,15 @@ const nextQuestion = () => {
     optionsContainer.querySelector(":nth-child(3)").innerHTML = "c. " + questions[currentQuestion].optionC;
     optionsContainer.querySelector(":nth-child(4)").innerHTML = "d. " + questions[currentQuestion].optionD;
 
-    optionsContainer.querySelector(":nth-child(1)").classList.remove("failure")
-    optionsContainer.querySelector(":nth-child(2)").classList.remove("failure")
-    optionsContainer.querySelector(":nth-child(3)").classList.remove("failure")
-    optionsContainer.querySelector(":nth-child(4)").classList.remove("failure")
+    optionsContainer.querySelector(":nth-child(1)").classList.remove("incorrect")
+    optionsContainer.querySelector(":nth-child(2)").classList.remove("incorrect")
+    optionsContainer.querySelector(":nth-child(3)").classList.remove("incorrect")
+    optionsContainer.querySelector(":nth-child(4)").classList.remove("incorrect")
 
-    optionsContainer.querySelector(":nth-child(1)").classList.remove("success")
-    optionsContainer.querySelector(":nth-child(2)").classList.remove("success")
-    optionsContainer.querySelector(":nth-child(3)").classList.remove("success")
-    optionsContainer.querySelector(":nth-child(4)").classList.remove("success")
+    optionsContainer.querySelector(":nth-child(1)").classList.remove("correct")
+    optionsContainer.querySelector(":nth-child(2)").classList.remove("correct")
+    optionsContainer.querySelector(":nth-child(3)").classList.remove("correct")
+    optionsContainer.querySelector(":nth-child(4)").classList.remove("correct")
 
 
     questionNumberDisplay.innerHTML = `Question ${questionNumber} of 5`;

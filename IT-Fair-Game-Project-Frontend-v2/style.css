@@ -156,17 +156,30 @@ input[type="text"]:focus, input[type="text"]:focus-within{
     border-radius: 0.5rem;
     margin: 1rem 0;
     box-shadow: 0 10px 5px 5px rgba(7, 14, 29, 0.5);
+    transition: 0.1s ease;
 }
-#gktest-box .options-container .option:hover{
+#gktest-box .options-container .option:not(.correct, .incorrect):hover{
     border: 1px solid rgb(var(--gray-500));
     background: rgb(var(--gray-800));
 }
 
-.success {
+.success, .correct{
     color: #51bc78;
 }
-.failure{
+.failure, .incorrect{
     color: #d75050;
+}
+.correct{
+    background: #51bc7834;
+}
+.incorrect{
+    background: #d7505034;
+}
+.correct:hover{
+    background: #51bc785c;
+}
+.incorrect:hover{
+    background: #d750505c;
 }
 
 #notification{
