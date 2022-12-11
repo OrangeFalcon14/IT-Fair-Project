@@ -78,6 +78,7 @@ public class GKTestService {
                     dto.setOptionB(gkTest.getOptionB());
                     dto.setOptionC(gkTest.getOptionC());
                     dto.setOptionD(gkTest.getOptionD());
+                    dto.setAnswer(gkTest.getAnswer());
 
                     usedId.add(dto.getId());
 
