@@ -56,6 +56,7 @@ public class IqTestService {
                     dto.setOptionB(iqTest.getOptionB());
                     dto.setOptionC(iqTest.getOptionC());
                     dto.setOptionD(iqTest.getOptionD());
+                    dto.setAnswer(iqTest.getAnswer());
 
                     usedId.add(dto.getId());
 

@@ -62,6 +62,7 @@ public class OpticalIllusionService {
         dto.setOptionB(opticalIllusionTest.getOptionB());
         dto.setOptionC(opticalIllusionTest.getOptionC());
         dto.setOptionD(opticalIllusionTest.getOptionD());
+        dto.setAnswer(opticalIllusionTest.getAnswer());
 
         toReturn.add(dto);
 
