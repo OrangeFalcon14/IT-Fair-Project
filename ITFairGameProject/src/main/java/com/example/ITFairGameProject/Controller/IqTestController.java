@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(maxAge = 3600)
 @RestController
 public class IqTestController {
 
@@ -24,7 +23,6 @@ public class IqTestController {
     }
 
     @GetMapping("/api/get2Questions")
-    @ResponseBody
     public List<IqTestDto> get5Questions() {
         return iqTestService.get2Questions();
     }
