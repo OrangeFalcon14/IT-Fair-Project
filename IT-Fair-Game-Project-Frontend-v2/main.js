@@ -26,6 +26,8 @@ let currentQuestion =  0;
 
 let answers = {};
 
+let gkTestScore = 0;
+
 const randomElement = (array) => {
     return array.at(Math.floor(Math.random() * array.length));
 }
@@ -96,7 +98,8 @@ const collectAnswer = (element) => {
     } */
     
     if(questions.find( element => element.id == question).answer.toLocaleLowerCase() === element.innerHTML.at(0)){
-        element.classList.add("correct")
+        element.classList.add("correct");
+        gkTestScore += 4;
     }else{
         element.classList.add("incorrect")
     }
@@ -189,6 +192,16 @@ const go = async (options) => {
             return a.id - b.id;
         })
         nextQuestion();
+    }else if(options.from === "gktest-box"){
+        let msg_output = document.querySelector("#gktest-result-box h3");
+        msg_output.innerHTML = (gkTestScore > 8) ? randomElement(compliments) : "Better luck next time!";
+        msg_output.classList.add((gkTestScore > 8) ? "success" : "failure");
+
+        document.querySelector("#gktest-result-box h5:nth-of-type(1)").innerHTML += `<p style="font-size: 18px;">${gkTestScore}</p>`;
+        document.querySelector("#gktest-result-box h5:nth-of-type(2)").innerHTML += `<p style="font-size: 18px;">${gkTestScore / 4}</p>`;
+
+        if(score > 8) document.querySelector("#gktest-result-box img:nth-of-type(1)").style.display = "block";
+        else document.querySelector("#gktest-result-box img:nth-of-type(2)").style.display = "block";
     }
 
     let to = document.querySelector(`#${options.to}`);
