@@ -30,7 +30,4 @@ public class  ItFairGameProject {
 
     @Column(name = "total_points")
     private long totalPoints;
-
-    @Column(name = "user_rank")
-    private long userRank;
 }

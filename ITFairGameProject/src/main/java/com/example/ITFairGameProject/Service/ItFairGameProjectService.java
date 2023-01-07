@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @Service
 public class ItFairGameProjectService {
@@ -30,19 +29,26 @@ public class ItFairGameProjectService {
     @Autowired
     private OpticalIllusionScoresRepository opticalIllusionScoresRepository;
 
-    public List<String> userNames = new ArrayList<>();
+    @Autowired
+    private UserNamesRepository userNamesRepository;
 
     //createUserName
     public ResponseEntity userName(UserNameDto userNameDto) {
 
+        UserNames user = new UserNames();
+        List<UserNames> userNamesObj = userNamesRepository.findAll();
+
+        List<String> userNames = new ArrayList<>();
+
+        for (UserNames userName : userNamesObj) {
+
+            userNames.add(userName.getUserName());
+        }
 
         String userName = userNameDto.getUserName();
-        Random random = new Random();
 
         if (userNames.contains(userName)) {
 
-//            userName = userName+random.nextInt();
-//            userNames.add(userName);
             userNameDto.setUserName(userName);
             userNameDto.setStatus("UNSUCCESSFUL, CHANGE USERNAME");
         }
@@ -52,9 +58,9 @@ public class ItFairGameProjectService {
             userNames.add(userName);
             userNameDto.setUserName(userName);
             userNameDto.setStatus("SUCCESSFUL");
+            user.setUserName(userName);
+            userNamesRepository.save(user);
         }
-
-        System.err.println(userNames);
 
         return ResponseEntity.ok(userNameDto);
     }
