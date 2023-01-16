@@ -31,4 +31,10 @@ public class ItFairGameController {
 
         return itFairGameService.calculateScores(dto);
     }
+
+    //getScoredByDescOrder
+    @GetMapping("/api/getInDesc")
+    public List<ItFairGameProjectDto> getScoresInDesc() {
+        return itFairGameService.getScoresInDesc();
+    }
 }

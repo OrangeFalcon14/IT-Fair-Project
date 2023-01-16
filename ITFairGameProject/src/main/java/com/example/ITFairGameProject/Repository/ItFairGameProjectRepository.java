@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ItFairGameProjectRepository extends JpaRepository<ItFairGameProject, Long> {}
+public interface ItFairGameProjectRepository extends JpaRepository<ItFairGameProject, Long> {
+    List<ItFairGameProject> findAllByOrderByTotalPointsDesc();
+}
