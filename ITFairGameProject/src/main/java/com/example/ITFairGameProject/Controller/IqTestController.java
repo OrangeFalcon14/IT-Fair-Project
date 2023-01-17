@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
+@CrossOrigin(maxAge = 3600)
 @RestController
 public class IqTestController {
 

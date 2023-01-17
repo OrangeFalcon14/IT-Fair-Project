@@ -8,11 +8,11 @@ const type = document.querySelector("#type");
 const text = document.querySelector("#text");
 const circleAnimation = document.querySelector("#circle-animation");
 
-const questionsContainer = document.querySelector(".question-container");
-const questionHeading = document.querySelector(".question-container h3");
-const optionsContainer = document.querySelector(".question-container .options-container");
-const questionNumberDisplay = document.querySelector(".question-container span");
-const nextQuestionButton = document.querySelector("#next-question-btn");
+let questionsContainer = document.querySelector(".question-container");
+let questionHeading = document.querySelector(".question-container h3");
+let optionsContainer = document.querySelector(".question-container .options-container");
+let questionNumberDisplay = document.querySelector(".question-container span");
+let nextQuestionButton = document.querySelector("#next-question-btn");
 
 let timer = 20;
 let updateCountdown;
@@ -21,12 +21,16 @@ let score = 0;
 let wpm = 0;
 let username;
 
+let currentTest = "gktest";
+
 let questionNumber = 1;
 let currentQuestion =  0;
 
 let answers = {};
 
 let gkTestScore = 0;
+let iqTestScore = 0;
+let opticalIllusionScore = 0;
 
 const randomElement = (array) => {
     return array.at(Math.floor(Math.random() * array.length));
@@ -65,7 +69,7 @@ const collectAnswer = (element) => {
     nextQuestionButton.disabled = false;
     let question; // = element.parentElement.parentElement.querySelector("h3").innerHTML.slice(1, 2).trim();
     questions.forEach((i) => {
-        if(i.question.slice(0, -1).trim() === element.parentElement.parentElement.querySelector("h3").innerHTML.slice(4, -1).trim()){
+        if(i.question.slice(0, -15).trim() === element.parentElement.parentElement.querySelector("h3").innerHTML.slice(4, -15).trim()){
             question = i.id;
         }
     })
@@ -99,26 +103,40 @@ const collectAnswer = (element) => {
     
     if(questions.find( element => element.id == question).answer.toLocaleLowerCase() === element.innerHTML.at(0)){
         element.classList.add("correct");
-        gkTestScore += 4;
+        if(currentTest == "gktest") gkTestScore += 4;
+        else if(currentTest == "iqtest") iqTestScore += 4;
     }else{
         element.classList.add("incorrect")
     }
 
-    console.log(answers);
 }
 
 const nextQuestion = () => {
     if (currentQuestion == 5) {
-        fetch('http://localhost:8080/api/collectGKAnswers',{
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify(answers)
-        })
-        go({to : "gktest-result-box", from : "gktest-box"});
-        return;
+        if(currentTest === "gktest"){
+            fetch('http://localhost:8080/api/collectGKAnswers',{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+            },
+            body: JSON.stringify(answers)
+            })
+            go({to : "gktest-result-box", from : "gktest-box"});
+            return;
+        }else if(currentTest === "iqtest"){
+            fetch('http://localhost:8080/api/collectIqAnswers',{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+            },
+            body: JSON.stringify(answers)
+            })
+            go({to : "iqtest-result-box", from : "iqtest-box"});
+            return;
+        }
+
     }
 
     nextQuestionButton.disabled = true;
@@ -200,8 +218,40 @@ const go = async (options) => {
         document.querySelector("#gktest-result-box h5:nth-of-type(1)").innerHTML += `<p style="font-size: 18px;">${gkTestScore}</p>`;
         document.querySelector("#gktest-result-box h5:nth-of-type(2)").innerHTML += `<p style="font-size: 18px;">${gkTestScore / 4}</p>`;
 
-        if(score > 8) document.querySelector("#gktest-result-box img:nth-of-type(1)").style.display = "block";
+        if(gkTestScore > 8) document.querySelector("#gktest-result-box img:nth-of-type(1)").style.display = "block";
         else document.querySelector("#gktest-result-box img:nth-of-type(2)").style.display = "block";
+    }else if(options.from === "iqtest-instructions-box"){
+        let request = await fetch("http://localhost:8080/api/get2Questions");
+        let response = await request.json();
+        questions = response;
+        questions.sort((a,b) => {
+            return a.id - b.id;
+        })
+
+        currentTest = "iqtest";
+
+        // reset stuff
+        answers = {};
+        questionNumber = 1;
+        currentQuestion =  0;
+
+        questionsContainer = document.querySelector(".iq-question-container");
+        questionHeading = document.querySelector(".iq-question-container h3");
+        optionsContainer = document.querySelector(".iq-question-container .options-container");
+        questionNumberDisplay = document.querySelector(".iq-question-container span");
+        nextQuestionButton = document.querySelector(".iq-question-container > .question-footer > button");
+
+        nextQuestion();
+    }else if(options.from === "iqtest-box"){
+        let msg_output = document.querySelector("#iqtest-result-box h3");
+        msg_output.innerHTML = (iqTestScore > 8) ? randomElement(compliments) : "Better luck next time!";
+        msg_output.classList.add((iqTestScore > 8) ? "success" : "failure");
+
+        document.querySelector("#iqtest-result-box h5:nth-of-type(1)").innerHTML += `<p style="font-size: 18px;">${iqTestScore}</p>`;
+        document.querySelector("#iqtest-result-box h5:nth-of-type(2)").innerHTML += `<p style="font-size: 18px;">${iqTestScore / 4}</p>`;
+
+        if(iqTestScore > 8) document.querySelector("#iqtest-result-box img:nth-of-type(1)").style.display = "block";
+        else document.querySelector("#iqtest-result-box img:nth-of-type(2)").style.display = "block";
     }
 
     let to = document.querySelector(`#${options.to}`);
