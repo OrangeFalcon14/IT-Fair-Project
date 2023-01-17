@@ -138,21 +138,21 @@ input[type="text"]:focus, input[type="text"]:focus-within{
     width: 100%;
 }
 
-#gktest-box h3, #iqtest-box h3{
+#gktest-box h3, #iqtest-box h3, #optical-box h3{
     padding: 1rem;
     line-height: 3rem;
 }
-#gktest-box .question-footer, #iqtest-box .question-footer{
+#gktest-box .question-footer, #iqtest-box .question-footer, #optical-box .question-footer{
     padding: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-#gktest-box .options-container, #iqtest-box .options-container{
+#gktest-box .options-container, #iqtest-box .options-container, #optical-box .options-container{
     padding: 1rem;
     background: rgb(var(--gray-900));
 }
-#gktest-box .options-container .option, #iqtest-box .options-container .option{
+#gktest-box .options-container .option, #iqtest-box .options-container .option, #optical-box .options-container .option{
     padding: 0.5rem 0.75rem;
     border: 1px solid rgb(var(--gray-600));
     border-radius: 0.5rem;
@@ -160,9 +160,16 @@ input[type="text"]:focus, input[type="text"]:focus-within{
     box-shadow: 0 10px 5px 5px rgba(7, 14, 29, 0.5);
     transition: 0.1s ease;
 }
-#gktest-box .options-container .option:not(.correct, .incorrect):hover, #iqtest-box .options-container .option:not(.correct, .incorrect):hover{
+#gktest-box .options-container .option:not(.correct, .incorrect):hover, #iqtest-box .options-container .option:not(.correct, .incorrect):hover, #optical-box .options-container .option:not(.correct, .incorrect):hover{
     border: 1px solid rgb(var(--gray-500));
     background: rgb(var(--gray-800));
+}
+
+#optical-box img{
+    border-radius: 1rem;
+    display: block;
+    margin: 0 auto;
+    margin-top: 2rem;
 }
 
 .success, .correct{

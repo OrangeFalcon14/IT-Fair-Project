@@ -13,6 +13,7 @@ let questionHeading = document.querySelector(".question-container h3");
 let optionsContainer = document.querySelector(".question-container .options-container");
 let questionNumberDisplay = document.querySelector(".question-container span");
 let nextQuestionButton = document.querySelector("#next-question-btn");
+let opticalIllusionImage;
 
 let timer = 20;
 let updateCountdown;
@@ -95,16 +96,13 @@ const collectAnswer = (element) => {
         if(answers.answer5) return;
         answers.question5 = question;
         answers.answer5 = element.innerHTML.at(0);
-    }/* else if (currentQuestion == "6") {
-        if(answers.answer6) return;
-        answers.question6 = question;
-        answers.answer6 = element.innerHTML.at(0);
-    } */
+    }
     
-    if(questions.find( element => element.id == question).answer.toLocaleLowerCase() === element.innerHTML.at(0)){
+    if(questions[currentQuestion - 1].answer.toLocaleLowerCase() === element.innerHTML.at(0)){
         element.classList.add("correct");
         if(currentTest == "gktest") gkTestScore += 4;
         else if(currentTest == "iqtest") iqTestScore += 4;
+        else if(currentTest == "optical") opticalIllusionScore += 4;
     }else{
         element.classList.add("incorrect")
     }
@@ -136,12 +134,30 @@ const nextQuestion = () => {
             go({to : "iqtest-result-box", from : "iqtest-box"});
             return;
         }
-
+    }else if(currentQuestion == 2){
+        if (currentTest === "optical"){
+            fetch('http://localhost:8080/api/calculateOpticalIllusionMarks',{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+            },
+            body: JSON.stringify(answers)
+            })
+            go({to : "optical-result-box", from : "optical-box"});
+            return;
+        }
     }
 
     nextQuestionButton.disabled = true;
 
     questionHeading.innerHTML = `Q${questionNumber}. ${questions[currentQuestion].question}`;
+
+    if(currentTest === "optical"){
+        let imgURL = questions[currentQuestion].imgUrl;
+        opticalIllusionImage.src = imgURL.slice(imgURL.lastIndexOf("/"), imgURL.length);
+    }
+
     
     optionsContainer.querySelector(":nth-child(1)").innerHTML = "a. " + questions[currentQuestion].optionA;
     optionsContainer.querySelector(":nth-child(2)").innerHTML = "b. " + questions[currentQuestion].optionB;
@@ -159,7 +175,7 @@ const nextQuestion = () => {
     optionsContainer.querySelector(":nth-child(4)").classList.remove("correct")
 
 
-    questionNumberDisplay.innerHTML = `Question ${questionNumber} of 5`;
+    questionNumberDisplay.innerHTML = `Question ${questionNumber} of ${questions.length}`;
 
     currentQuestion++;
     questionNumber++;
@@ -252,6 +268,39 @@ const go = async (options) => {
 
         if(iqTestScore > 8) document.querySelector("#iqtest-result-box img:nth-of-type(1)").style.display = "block";
         else document.querySelector("#iqtest-result-box img:nth-of-type(2)").style.display = "block";
+    }else if(options.from === "iqtest-result-box"){
+        let request = await fetch("http://localhost:8080/api/get5IllusionQuestions");
+        let response = await request.json();
+        questions = response;
+        questions.sort((a,b) => {
+            return a.id - b.id;
+        })
+
+        currentTest = "optical";
+
+        // reset stuff
+        answers = {};
+        questionNumber = 1;
+        currentQuestion =  0;
+
+        questionsContainer = document.querySelector(".optical-question-container");
+        questionHeading = document.querySelector(".optical-question-container h3");
+        optionsContainer = document.querySelector(".optical-question-container .options-container");
+        questionNumberDisplay = document.querySelector(".optical-question-container span");
+        nextQuestionButton = document.querySelector(".optical-question-container > .question-footer > button");
+        opticalIllusionImage  = document.querySelector(".optical-question-container img");
+
+        nextQuestion();
+    }else if(options.from === "optical-box"){
+        let msg_output = document.querySelector("#optical-result-box h3");
+        msg_output.innerHTML = (opticalIllusionScore >= 4) ? randomElement(compliments) : "Better luck next time!";
+        msg_output.classList.add((opticalIllusionScore >= 4) ? "success" : "failure");
+
+        document.querySelector("#optical-result-box h5:nth-of-type(1)").innerHTML += `<p style="font-size: 18px;">${opticalIllusionScore}</p>`;
+        document.querySelector("#optical-result-box h5:nth-of-type(2)").innerHTML += `<p style="font-size: 18px;">${opticalIllusionScore / 4}</p>`;
+
+        if(opticalIllusionScore >= 4) document.querySelector("#optical-result-box img:nth-of-type(1)").style.display = "block";
+        else document.querySelector("#optical-result-box img:nth-of-type(2)").style.display = "block";
     }
 
     let to = document.querySelector(`#${options.to}`);

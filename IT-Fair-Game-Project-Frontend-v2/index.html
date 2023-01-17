@@ -21,6 +21,8 @@
             <input type="text" id="username-inp" style="width: 100%;" onkeyup="handleKeyUp" placeholder="Your name..."/>
             <p id="username-error"></p>
             <button style="margin-top: 1rem;" onclick="go({to: 'typing-test-instructions-box', from: 'username-inp-box'})">Begin!</button>
+            <!-- <button id="typing-test-scores-btn" onclick="go({to: 'optical-instructions-box', from: 'iqtest-result-box'})">Next</button> -->
+
         </div>
 
         <div class="box hide" id="typing-test-instructions-box">
@@ -153,7 +155,45 @@
         </div>
 
         <div class="box hide " id="optical-instructions-box">
-            
+            <h3>Instructions</h3>
+            <ul style="font-size: 18px;">
+                <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptas, vero?</li>
+                <li>Modi laborum iusto illum? Esse in maiores necessitatibus asperiores error.</li>
+                <li>Suscipit soluta nulla vitae ex necessitatibus adipisci ducimus debitis impedit.</li>
+            </ul>
+            <button style="margin-top: 1rem;" onclick="go({to: 'optical-box', from: 'optical-instructions-box'})">Got it</button>
+        </div>
+
+        <div class="box hide" id="optical-box" style="padding: 0">
+            <div class="optical-question-container">
+                <img src="" alt="" />
+                <h3></h3>
+                <div class="options-container">
+                    <div class="option" onclick="collectAnswer(this)"></div>
+                    <div class="option" onclick="collectAnswer(this)"></div>
+                    <div class="option" onclick="collectAnswer(this)"></div>
+                    <div class="option" onclick="collectAnswer(this)"></div>
+                </div>
+                <div class="question-footer">
+                    <span></span>
+                    <button onclick="nextQuestion()" id="next-question-btn">Next</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="box hide" id="optical-result-box">
+            <div class="results-container">
+                <div class="results">
+                    <h3></h3>
+                    <h5>Score: </h5>
+                    <h5>Correct: </h5>
+                </div>
+                <div class="gif">
+                    <img src="https://media.tenor.com/q4xcME8SyY8AAAAC/text-animated.gif" style="display: none;" alt="" />
+                    <img src="https://media.tenor.com/auG5alBd6mQAAAAC/nextyear-maybe.gif" style="display: none;" alt="" />
+                </div>
+            </div>
+            <button id="typing-test-scores-btn" onclick="go({to: 'end', from: 'optical-result-box'})">Next</button>
         </div>
     </div>
 </body>
