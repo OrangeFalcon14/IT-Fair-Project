@@ -47,7 +47,7 @@ public class GKTestService {
     //get5Questions
     public List<GKTestDto> get5Questions() {
 
-        int firstId = 1, lastId = 7;
+        int firstId = 1, lastId = 27;
 
         List<GKTestDto> toReturn = new ArrayList<>();
 

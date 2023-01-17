@@ -88,4 +88,25 @@ public class ItFairGameProjectService {
         itFairGameProjectRepository.save(itFairGameProject);
         return ResponseEntity.ok(dto);
     }
+
+    public List<ItFairGameProjectDto> getScoresInDesc() {
+
+        List<ItFairGameProject> itFairGameProjects = itFairGameProjectRepository.findAllByOrderByTotalPointsDesc();
+        List<ItFairGameProjectDto> toReturn = new ArrayList<>();
+
+        for (ItFairGameProject itFairGameProject : itFairGameProjects) {
+
+            ItFairGameProjectDto dto = new ItFairGameProjectDto();
+            dto.setUserName(itFairGameProject.getUserName());
+            dto.setTypingTestScores(itFairGameProject.getTypingTestScores());
+            dto.setIQTestScores(itFairGameProject.getIQTestScores());
+            dto.setGKTestScores(itFairGameProject.getGKTestScores());
+            dto.setOpticalIllusionScores(itFairGameProject.getOpticalIllusionScores());
+            dto.setTotalPoints(itFairGameProject.getTotalPoints());
+
+            toReturn.add(dto);
+        }
+
+        return toReturn;
+    }
 }
