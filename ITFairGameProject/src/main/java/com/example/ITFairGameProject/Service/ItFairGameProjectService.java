@@ -85,6 +85,11 @@ public class ItFairGameProjectService {
         itFairGameProject.setOpticalIllusionScores(opticalIllusionScores.getTotalMarks());
         itFairGameProject.setTotalPoints(dto.getTotalPoints());
 
+        dto.setGKTestScores(itFairGameProject.getGKTestScores());
+        dto.setTypingTestScores(itFairGameProject.getTypingTestScores());
+        dto.setIQTestScores(itFairGameProject.getIQTestScores());
+        dto.setOpticalIllusionScores(itFairGameProject.getOpticalIllusionScores());
+
         itFairGameProjectRepository.save(itFairGameProject);
         return ResponseEntity.ok(dto);
     }

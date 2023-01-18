@@ -79,7 +79,6 @@ public class OpticalIllusionService {
             else {
 
                 opticalIllusionTest.setId(randomId2);
-                dto.setAnswer(opticalIllusionTest.getAnswer());
                 dto.setId(opticalIllusionTest.getId());
                 dto.setImgUrl(opticalIllusionTest.getImgUrl());
                 dto.setQuestion(opticalIllusionTest.getQuestion());
@@ -87,6 +86,7 @@ public class OpticalIllusionService {
                 dto.setOptionB(opticalIllusionTest.getOptionB());
                 dto.setOptionC(opticalIllusionTest.getOptionC());
                 dto.setOptionD(opticalIllusionTest.getOptionD());
+                dto.setAnswer(opticalIllusionTest.getAnswer());
 
                 toReturn.add(dto);
 

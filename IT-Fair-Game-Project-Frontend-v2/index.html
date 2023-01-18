@@ -29,7 +29,7 @@
             <h3>Instructions</h3>
             <ul style="font-size: 18px;">
                 <li>You will be taking a typing test now.</li>
-                <li>Your score will be displayed with your typing speed once you finish your typing test</li>
+                <li>You will be given a score between 1 and 5 based on the number of correct words you type.</li>
                 <li>Press the "Got it" button to start.</li>
             </ul>
             <button style="margin-top: 1rem;" onclick="go({to: 'typing-test-box', from: 'typing-test-instructions-box'})">Got it</button>
@@ -75,9 +75,9 @@
         <div class="box hide" id="gktest-instructions-box">
             <h3>Instructions</h3>
             <ul style="font-size: 18px;">
-                <li>You will be taking the general knowledge now.</li>
+                <li>Your next challenge is a GK Test.</li>
                 <li>They will be multiple choice questions.</li>
-                <li>If your choice is correct, it will be highlighted in green, if wrong, it will be highlighted in red and the correct answer is highlighted in green</li>
+                <li>We have picked out the toughest general knowledge questions on the internet.</li>
             </ul>
             <button style="margin-top: 1rem;" onclick="go({to: 'gktest-box', from: 'gktest-instructions-box'})">Got it</button>
         </div>
@@ -116,9 +116,9 @@
         <div class="box hide" id="iqtest-instructions-box">
             <h3>Instructions</h3>
             <ul style="font-size: 18px;">
-                <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptas, vero?</li>
-                <li>Modi laborum iusto illum? Esse in maiores necessitatibus asperiores error.</li>
-                <li>Suscipit soluta nulla vitae ex necessitatibus adipisci ducimus debitis impedit.</li>
+                <li>Your next challenge is an IQ Test now.</li>
+                <li>The rules are the same as GK Test.</li>
+                <li>Filler content to make the UI look good :) Lorem ipsum dolor sit amet consectetur.</li>
             </ul>
             <button style="margin-top: 1rem;" onclick="go({to: 'iqtest-box', from: 'iqtest-instructions-box'})">Got it</button>
         </div>
@@ -157,9 +157,10 @@
         <div class="box hide " id="optical-instructions-box">
             <h3>Instructions</h3>
             <ul style="font-size: 18px;">
-                <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptas, vero?</li>
-                <li>Modi laborum iusto illum? Esse in maiores necessitatibus asperiores error.</li>
-                <li>Suscipit soluta nulla vitae ex necessitatibus adipisci ducimus debitis impedit.</li>
+                <li>More filler content :)</li>
+                <li>We ran out of instructions so we used this.</li>
+                <li>Dolores qui asperiores quidem explicabo tempore commodi quibusdam.</li>
+                <li>Est reiciendis, ipsum, amet suscipit minima, consequuntur?</li>
             </ul>
             <button style="margin-top: 1rem;" onclick="go({to: 'optical-box', from: 'optical-instructions-box'})">Got it</button>
         </div>
@@ -194,6 +195,58 @@
                 </div>
             </div>
             <button id="typing-test-scores-btn" onclick="go({to: 'end', from: 'optical-result-box'})">Next</button>
+        </div>
+
+        <div class="box hide" id="end">
+            <div id="end-container">
+                <h2>Thank you for participating in Dire Straits!</h2>
+                <p class="small" style="overflow: auto;">011000110110111101101110011101100110010101110100001000000010100001000001011011000110110000100000011110010110111101110101011100100010000001100100011000010111010001100001001000000111011101101001011011000110110000100000011000100110010100100000011100000111001001101111011011010111000001110100011011000111100100100000011100110110111101101100011001000010000001110100011011110010000001000111011011110110111101100111011011000110010100101001</p>
+                <div style="text-align: center;">
+                    <button id="typing-test-scores-btn" onclick="go({to: 'result-box', from: 'end'})">View Scores <i style="margin-left: 5px" class="fa-solid fa-arrow-right"></i> </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="box hide" id="result-box">
+            <h3>Name: </h3>
+            <h4>Total Score: </h4>
+            <table class="results-table">
+                <tr>
+                    <td>
+                        <p class="event">Typing test score</p>
+                    </td>
+                    <td>
+                        <p id="typing-test-result"></p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <p class="event">GK Test</p>
+                    </td>
+                    <td>
+                        <p id="gktest-result"></p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <p class="event">IQ Test</p>
+                    </td>
+                    <td>
+                        <p id="iqtest-result"></p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <p class="event">Optical Illusion</p>
+                    </td>
+                    <td>
+                        <p id="optical-illusion-result"></p>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 </body>

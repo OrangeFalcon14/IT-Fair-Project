@@ -32,20 +32,29 @@ public class TypingTestService {
 
         long typingScore = 0;
 
-        if (wpm <= 20) {
-
-            typingScore = 2;
+        if(wpm == 0) {
+            typingScore = 0;
         }
 
-        else if (wpm > 20 && wpm <= 50) {
+        else if (wpm <= 10) {
+            typingScore = 1;
+        }
 
+        else if (wpm > 10 && wpm <= 20) {
+            typingScore = 2; 
+        }
+
+        else if (wpm > 20 && wpm <= 35) {
             typingScore = 3;
         }
 
-        else if (wpm > 50) {
-
-            typingScore = 5;
+        else if (wpm > 35 && wpm <= 50) {
+            typingScore = 4;
         }
+
+        else if (wpm > 50) {
+            typingScore = 5;
+        } 
 
         dto.setUserScore(typingScore);
 

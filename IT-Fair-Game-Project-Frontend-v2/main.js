@@ -1,4 +1,4 @@
-const compliments = ["Well done!", "Good job!", "Not bad!", "Congratulations!", "Nice!", "Awesome!", "Great job!"];
+const compliments = ["Well done!", "Good job!", "Not bad!", "Congratulations!", "Nice!", "Awesome!", "Great job!", "Phenomenal!", "Way to go!", "Fantastic!", "You're a smart cookie!"];
 
 const usernameInp = document.querySelector("#username-inp");
 const usernameError = document.querySelector("#username-error");
@@ -301,6 +301,27 @@ const go = async (options) => {
 
         if(opticalIllusionScore >= 4) document.querySelector("#optical-result-box img:nth-of-type(1)").style.display = "block";
         else document.querySelector("#optical-result-box img:nth-of-type(2)").style.display = "block";
+    }else if(options.from === "end"){
+        console.log(username);
+        let call = await fetch("http://localhost:8080/api/calculateScores", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            },
+            body: JSON.stringify({
+                userName: username,
+            })
+        })
+        let response = await call.json();
+        // response = { id: 0, userName: "Vishnu R Shastry", typingTestScores: 0, opticalIllusionScores: 0, totalPoints: 43, userRank: 0, userTypedSpeed: 0, gktestScores: 0, iqtestScores: 0 };
+        `Object { id: 0, userName: "Vishnu R Shastry", typingTestScores: 0, opticalIllusionScores: 0, totalPoints: 43, userRank: 0, userTypedSpeed: 0, gktestScores: 0, iqtestScores: 0 }`
+        document.querySelector("#result-box h3").innerHTML = `Name: <span style="font-weight:normal">${response.userName}</span>`;
+        document.querySelector("#result-box h4").innerHTML = `Rank: <span style="font-weight:normal">${response.totalPoints}</span>`;
+        document.querySelector("#result-box #typing-test-result").innerHTML = response.typingTestScores;
+        document.querySelector("#result-box #gktest-result").innerHTML = response.gktestScores;
+        document.querySelector("#result-box #iqtest-result").innerHTML = response.iqtestScores;
+        document.querySelector("#result-box #optical-illusion-result").innerHTML = response.opticalIllusionScores;
     }
 
     let to = document.querySelector(`#${options.to}`);
