@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface ItFairGameProjectRepository extends JpaRepository<ItFairGameProject, Long> {
     List<ItFairGameProject> findAllByOrderByTotalPointsDesc();
+    ItFairGameProject findItFairGameProjectByUserName(String userName);
 }

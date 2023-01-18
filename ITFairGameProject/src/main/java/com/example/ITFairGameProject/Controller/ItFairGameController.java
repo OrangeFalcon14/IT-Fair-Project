@@ -37,4 +37,11 @@ public class ItFairGameController {
     public List<ItFairGameProjectDto> getScoresInDesc() {
         return itFairGameService.getScoresInDesc();
     }
+
+    //getSpecificUsersScore
+    @GetMapping("/api/getUserRankAndInfo/{userName}")
+    public ItFairGameProjectDto getSpecificUsersScore(@PathVariable String userName) {
+
+        return itFairGameService.getUserRankByUserName(userName);
+    }
 }
