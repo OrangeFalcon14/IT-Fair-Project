@@ -84,6 +84,7 @@ public class ItFairGameProjectService {
         itFairGameProject.setIQTestScores(iqTestScores.getTotalMarks());
         itFairGameProject.setOpticalIllusionScores(opticalIllusionScores.getTotalMarks());
         itFairGameProject.setTotalPoints(dto.getTotalPoints());
+        itFairGameProject.setUserRank(0);
 
         dto.setGKTestScores(itFairGameProject.getGKTestScores());
         dto.setTypingTestScores(itFairGameProject.getTypingTestScores());

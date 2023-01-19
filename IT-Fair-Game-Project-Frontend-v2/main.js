@@ -102,9 +102,14 @@ const collectAnswer = (element) => {
         element.classList.add("correct");
         if(currentTest == "gktest") gkTestScore += 4;
         else if(currentTest == "iqtest") iqTestScore += 4;
-        else if(currentTest == "optical") opticalIllusionScore += 4;
+        else if(currentTest == "optical") opticalIllusionScore += 5;
     }else{
-        element.classList.add("incorrect")
+        element.classList.add("incorrect");
+        setTimeout(() => {
+            [...element.parentElement.children].forEach(child => {
+                if(questions[currentQuestion - 1].answer.toLocaleLowerCase() === child.innerHTML.at(0)) child.classList.add("correct");
+            })
+        }, 50);
     }
 
 }
@@ -293,13 +298,13 @@ const go = async (options) => {
         nextQuestion();
     }else if(options.from === "optical-box"){
         let msg_output = document.querySelector("#optical-result-box h3");
-        msg_output.innerHTML = (opticalIllusionScore >= 4) ? randomElement(compliments) : "Better luck next time!";
-        msg_output.classList.add((opticalIllusionScore >= 4) ? "success" : "failure");
+        msg_output.innerHTML = (opticalIllusionScore >= 5) ? randomElement(compliments) : "Better luck next time!";
+        msg_output.classList.add((opticalIllusionScore >= 5) ? "success" : "failure");
 
         document.querySelector("#optical-result-box h5:nth-of-type(1)").innerHTML += `<p style="font-size: 18px;">${opticalIllusionScore}</p>`;
-        document.querySelector("#optical-result-box h5:nth-of-type(2)").innerHTML += `<p style="font-size: 18px;">${opticalIllusionScore / 4}</p>`;
+        document.querySelector("#optical-result-box h5:nth-of-type(2)").innerHTML += `<p style="font-size: 18px;">${opticalIllusionScore / 5}</p>`;
 
-        if(opticalIllusionScore >= 4) document.querySelector("#optical-result-box img:nth-of-type(1)").style.display = "block";
+        if(opticalIllusionScore >= 5) document.querySelector("#optical-result-box img:nth-of-type(1)").style.display = "block";
         else document.querySelector("#optical-result-box img:nth-of-type(2)").style.display = "block";
     }else if(options.from === "end"){
         console.log(username);
@@ -314,14 +319,32 @@ const go = async (options) => {
             })
         })
         let response = await call.json();
-        // response = { id: 0, userName: "Vishnu R Shastry", typingTestScores: 0, opticalIllusionScores: 0, totalPoints: 43, userRank: 0, userTypedSpeed: 0, gktestScores: 0, iqtestScores: 0 };
-        `Object { id: 0, userName: "Vishnu R Shastry", typingTestScores: 0, opticalIllusionScores: 0, totalPoints: 43, userRank: 0, userTypedSpeed: 0, gktestScores: 0, iqtestScores: 0 }`
+        let callForTable = await fetch("http://localhost:8080/api/getInDesc");
+        let table = await callForTable.json();
+
+        table.forEach(row => {
+            if(row.userName === response.userName) response.userRank = row.userRank;
+        });
+
         document.querySelector("#result-box h3").innerHTML = `Name: <span style="font-weight:normal">${response.userName}</span>`;
-        document.querySelector("#result-box h4").innerHTML = `Rank: <span style="font-weight:normal">${response.totalPoints}</span>`;
+        document.querySelector("#result-box h4:nth-of-type(1)").innerHTML = `Total Score: <span style="font-weight:normal">${response.totalPoints}</span>`;
+        document.querySelector("#result-box h4:nth-of-type(2)").innerHTML = `Rank: <span style="font-weight:normal">${response.userRank}</span>`;
         document.querySelector("#result-box #typing-test-result").innerHTML = response.typingTestScores;
         document.querySelector("#result-box #gktest-result").innerHTML = response.gktestScores;
         document.querySelector("#result-box #iqtest-result").innerHTML = response.iqtestScores;
         document.querySelector("#result-box #optical-illusion-result").innerHTML = response.opticalIllusionScores;
+
+        const usersTable = document.querySelector("#users-table table");
+
+        table.forEach(row => {
+            usersTable.innerHTML += `
+            <tr>
+                <td>${row.userRank}</td>
+                <td>${row.userName}</td>
+                <td>${row.totalPoints}</td>
+            </tr>
+            `
+        })
     }
 
     let to = document.querySelector(`#${options.to}`);
@@ -330,6 +353,10 @@ const go = async (options) => {
     from.classList.remove("show");
     to.classList.add("show");
     to.classList.remove("hide");
+
+    if(options.to === "result-box"){
+        document.querySelector("#users-table").classList.add("show");
+    }
 }
 
 const parseText = () => {
