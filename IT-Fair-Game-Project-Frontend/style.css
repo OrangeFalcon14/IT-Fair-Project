@@ -213,7 +213,7 @@ input[type="text"]:focus, input[type="text"]:focus-within{
 
 #end button:hover i{
     display: inline;
-    transform: translateX(0rem);
+    transform: translateX(0);
 }
 
 #result-box .results-table{
@@ -259,36 +259,45 @@ input[type="text"]:focus, input[type="text"]:focus-within{
 }
 
 #username-error{
-    margin-bottom: 0px;
+    margin-bottom: 0;
     display: none;
     color: #cb1a1a;
     font-weight:bolder;
 }
 
 #typing-test-container{
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: 1fr 1fr;
     text-align: left;
+    position:relative;
+    height: 100%;
 }
 
 #text{
     background: rgb(var(--gray-900));
     padding: 1rem;
     border-radius: 1rem;
-    font-size: 18px;
+    font-size: 2.5rem;
+    font-family: sans;
+    color: #505050;
+    height: 82%;
+    line-height: 4rem;
+    min-width: calc(60vw - 6.5rem);
+    user-select: none;
+    overflow: hidden;
 }
 #type{
-    background: rgb(var(--gray-900));
+    background: transparent;
     font-family: sans;
-    font-size: 18px;
+    font-size: 2.5rem;
     border-radius: 1rem;
     padding: 1rem;
     outline: none;
     border: 1px solid transparent;
-}
-#type:focus, #type:focus-within{
-    border: 1px solid rgb(var(--sky-500));
+    resize:none;
+    position: absolute;
+    top: -2px;
+    min-width: calc(60vw - 6.5rem);
+    line-height: 4rem;
+    overflow: hidden;
 }
 
 svg{
