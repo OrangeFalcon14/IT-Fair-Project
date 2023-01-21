@@ -3,15 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
     <title>IT Fair Project</title>
 </head>
 <body>
-    Links:<br>
-    <a href="old_projects/Asteroids.html">Asteroids.html</a><br>
-    <a href="old_projects/Asteroids_with_Neural_Network.html">Asteroids_with_Neural_Network.html</a><br>
-    <a href="old_projects/Clock.html">Clock.html</a><br>
-    <a href="old_projects/Code_Editor.html">Code_Editor.html</a><br>
-    <a href="old_projects/Pong_Multiplayer.html">Pong_Multiplayer.html</a><br>
-	<a href="Calculator/index.html">Calculator</a><br>
+    <div class="links-container">
+        <div class="link" onclick="openWebsite('http://localhost:5173');">
+            <h2>Dire Straits</h2>
+            <p class="arrow ">
+                <i class="fa-solid fa-arrow-right"></i>
+            </p>
+        </div>
+        <div class="link" onclick="openWebsite('https://orangefalcon14.github.io/Nexion');">
+            <h2>Nexion</h2>
+            <p class="arrow ">
+                <i class="fa-solid fa-arrow-right"></i>
+            </p>
+        </div>
+        <div class="link" onclick="openWebsite('http://localhost:5174');">
+            <h2>Reaction Timer</h2>
+            <p class="arrow ">
+                <i class="fa-solid fa-arrow-right"></i>
+            </p>
+        </div>
+        <div class="link" onclick="openWebsite('https://orangefalcon14.github.io/IT-Fair-Project/old_projects/Asteroids.html');">
+            <h2>Asteroids</h2>
+            <p class="arrow ">
+                <i class="fa-solid fa-arrow-right"></i>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function openWebsite(url) {
+            open(url, target="blank");
+        }
+    </script>
 </body>
 </html>
