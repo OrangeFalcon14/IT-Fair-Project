@@ -64,6 +64,10 @@ public class GKTestService {
 
                 GKTest gkTest = gkTestRepository.findById(randomId);
 
+                if (randomId == 4) {
+                    continue;
+                }
+
                 if (usedId.contains(randomId)) {
 
                     continue;
